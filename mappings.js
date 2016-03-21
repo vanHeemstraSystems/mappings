@@ -4,7 +4,7 @@
  * param: mapping (e.g. 'rethinkdb')
  */
 module.exports = function(mapping) {
-  var mapping = toLowerCase(mapping);
+  var mapping = mapping.toLowerCase();
   var _Mappings = {};
   var path = require('../libraries/path');
   var paths = require('../paths/paths');
