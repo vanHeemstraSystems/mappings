@@ -3,7 +3,15 @@
  * but with our own modifications (removal of 'thinky' and 'rethinkdbdash')
  */
 
-var Mappings = require(__dirname+'/mappings.js')('RethinkDB'); // here we specify that we want the 'rethinkdb' mapping
+// Import express and co
+var path = require('../../libraries/path');
+var paths = require('../../paths/paths');
+var express = require(path.join(paths.libraries, '/express.js'));
+var bodyParser = require(path.join(paths.libraries, '/body-parser.js'));
+
+var app = express();
+
+var Mappings = require(__dirname+'/../mappings.js')('RethinkDB'); // here we specify that we want the 'rethinkdb' mapping
 console.log('Mappings: ', Mappings);
 
 //now call RethinkDB mapping

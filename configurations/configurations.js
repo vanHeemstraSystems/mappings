@@ -1,4 +1,11 @@
-exports.host = process.env['WERCKER_RETHINKDB_HOST'] || 'localhost';
-exports.port = process.env['WERCKER_RETHINKDB_PORT'] || 28015;
-exports.db = 'thinky_test';
-exports.authKey = '';
+module.exports = {
+    rethinkdb: {
+        host: "localhost",
+        port: 28015,
+        authKey: "",
+        db: "test"
+    },
+    express: {
+        port: 3000
+    }
+}

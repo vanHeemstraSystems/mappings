@@ -75,6 +75,10 @@ RethinkDB.prototype.dbReady = function() {
   var self = this;
   if (this._dbReadyPromise) return this._dbReadyPromise;
   var r = self.r;
+
+  console.log('r: ', r); // {"db": "test"}
+  console.log('self._config.db: ', self._config.db); // test
+
   this._dbReadyPromise = r.dbCreate(self._config.db)
   .run()
   .error(function(error) {
