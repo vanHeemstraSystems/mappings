@@ -71,6 +71,7 @@ function RethinkDB(config) {
  * @return {Promise=} Returns a promise which will resolve when the database is ready.
  */
 RethinkDB.prototype.dbReady = function() {
+  console.log('RethinkDB.prototype.dbReady called');	
   var self = this;
   if (this._dbReadyPromise) return this._dbReadyPromise;
   var r = self.r;
@@ -95,6 +96,7 @@ RethinkDB.prototype.dbReady = function() {
  * @return {object} The global options of the library
  */
 RethinkDB.prototype.getOptions = function() {
+  console.log('RethinkDB.prototype.getOptions called');	
   return this._options;
 }
 
@@ -114,6 +116,7 @@ RethinkDB.prototype.getOptions = function() {
  *  - `validate` {"oncreate"|"onsave"}, default "onsave".
  */
 RethinkDB.prototype.createModel = function(name, schema, options) {
+  console.log('RethinkDB.prototype.createModel called');		
   var self = this;
 
   // Make a deep copy of the options as the model may overwrite them.
@@ -141,11 +144,13 @@ RethinkDB.prototype.createModel = function(name, schema, options) {
  * testing and should not be used in other use cases.
  */
 RethinkDB.prototype._clean = function() {
+  console.log('RethinkDB.prototype._clean');	
   this.models = {};
 }
 
 // Export the module.
 module.exports = function(config) {
+  console.log('RethinkDB module.exports - called');	
   return new RethinkDB(config);
 }
 

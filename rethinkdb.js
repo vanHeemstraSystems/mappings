@@ -11,6 +11,6 @@ module.exports = function() {
   console.log(server_prefix + " - Mappings rethinkdb required.");
   // to do ... do mapping to rethinkdb here... see 'thinky' as an example
   // a lightweight NodeJS ORM for RethinkDB. https://thinky.io/
-  rethinkdb = require('./rethinkdb/rethinkdb.js');
+  rethinkdb = require('./rethinkdb/rethinkdb.js')();// call it
   return _RethinkDB;
 };//does not call itself
