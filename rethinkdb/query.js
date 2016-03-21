@@ -731,6 +731,9 @@ Query.prototype.removeRelation = function(field, joinedDocument) {
  * starting with an underscore).
  * Some method are slightly changed: `get`, `update`, `replace`.
  */
+
+/* TEMPORARILY COMMENTED OUT AS IT CAUSES AN ERROR
+
 (function() {
   var Term = require(path.join(paths.libraries, '/rethinkdb.js'))({pool: false}).expr(1).__proto__; //WAS var Term = require('rethinkdbdash')({pool: false}).expr(1).__proto__;
   util.loopKeys(Term, function(Term, key) {
@@ -820,6 +823,8 @@ Query.prototype.removeRelation = function(field, joinedDocument) {
       }
   });
 })();
+
+*/
 
 Query.prototype._isPointWrite = function() {
   return this._pointWrite || (Array.isArray(this._query._query) &&

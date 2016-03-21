@@ -657,6 +657,8 @@ Model.prototype.hasAndBelongsToMany = function(joinedModel, fieldDoc, leftKey, r
   }
 };
 
+/* TEMPORARILY COMMENTED OUT AS IT CAUSES AN ERROR
+
 (function() {
   // Import rethinkdbdash methods
   var Term = require('rethinkdbdash')({pool: false}).expr(1).__proto__;
@@ -726,6 +728,8 @@ Model.prototype.hasAndBelongsToMany = function(joinedModel, fieldDoc, leftKey, r
     })(key);
   });
 })();
+
+*/
 
 Model.prototype.getJoin = function() {
   var query = new Query(this);

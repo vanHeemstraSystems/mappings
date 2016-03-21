@@ -13,6 +13,5 @@ module.exports = function(mapping) {
   server_prefix = common.server_prefix || 'PREFIX';
   console.log(server_prefix + " - Mappings mappings required.");
   _Mappings.mapping = require(__dirname+'/'+mapping+'.js');
-  console.log('_Mappings.mapping: ', _Mappings.mapping);
   return _Mappings;
 };//does not call itself
