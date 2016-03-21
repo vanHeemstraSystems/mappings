@@ -1,5 +1,7 @@
+var path = require('../../../libraries/path');
+var paths = require('../../../paths/paths');
 var util =       require(__dirname+'/../util.js');
-var validator =  require("validator");
+var validator = require(path.join(paths.libraries, '/validator.js'));
 var Errors = require(__dirname+'/../errors.js');
 
 /**

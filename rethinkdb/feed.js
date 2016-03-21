@@ -1,4 +1,6 @@
-var Promise = require('bluebird');
+var path = require('../../libraries/path');
+var paths = require('../../paths/paths');
+var Promise = require(path.join(paths.libraries, '/bluebird.js'));
 var EventEmitter = require('events').EventEmitter;
 var util = require(__dirname+'/util.js');
 

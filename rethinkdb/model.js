@@ -1,5 +1,5 @@
-var path = require('../libraries/path');
-var paths = require('../paths/paths');
+var path = require('../../libraries/path');
+var paths = require('../../paths/paths');
 var util = require(__dirname+'/util.js');
 var _util = require('util');
 var schemaUtil = require(__dirname+'/schema.js');

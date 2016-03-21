@@ -1,7 +1,9 @@
+var path = require('../../libraries/path');
+var paths = require('../../paths/paths');
 var schemaUtil =    require(__dirname+'/schema.js');
 var type =          require(__dirname+'/type/index.js');
 var util =          require(__dirname+'/util.js');
-var Promise =       require('bluebird');
+var Promise = require(path.join(paths.libraries, '/bluebird.js'));
 var EventEmitter =  require('events').EventEmitter;
 var Errors =        require(__dirname+'/errors.js');
 

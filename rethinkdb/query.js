@@ -1,4 +1,6 @@
-var Promise = require('bluebird');
+var path = require('../../libraries/path');
+var paths = require('../../paths/paths');
+var Promise = require(path.join(paths.libraries, '/bluebird.js'));
 var util = require(__dirname+'/util.js');
 var Errors = require(__dirname+'/errors.js');
 var schemaUtil = require(__dirname+'/schema.js');
@@ -730,7 +732,7 @@ Query.prototype.removeRelation = function(field, joinedDocument) {
  * Some method are slightly changed: `get`, `update`, `replace`.
  */
 (function() {
-  var Term = require('rethinkdbdash')({pool: false}).expr(1).__proto__;
+  var Term = require(path.join(paths.libraries, '/rethinkdb.js'))({pool: false}).expr(1).__proto__; //WAS var Term = require('rethinkdbdash')({pool: false}).expr(1).__proto__;
   util.loopKeys(Term, function(Term, key) {
     if (key === 'run' || key[0] === '_') return;
     // Note: We suppose that no method has an empty name

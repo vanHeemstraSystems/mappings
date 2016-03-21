@@ -1,5 +1,5 @@
-var path = require('../libraries/path');
-var paths = require('../paths/paths');
+var path = require('../../libraries/path');
+var paths = require('../../paths/paths');
 var rethinkdb = require(path.join(paths.libraries, '/rethinkdb.js'));
 var Promise = require(path.join(paths.libraries, '/bluebird.js'));
 var Model = require(__dirname+'/model.js');
