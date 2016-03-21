@@ -1,13 +1,14 @@
 /*
  * Following the example from https://github.com/neumino/thinky
+ * but with our own modifications (removal of 'thinky' and 'rethinkdbdash')
  */
 
-var Mappings = require(__dirname+'/mappings.js')('RethinkDB');
+var Mappings = require(__dirname+'/mappings.js')('RethinkDB'); // here we specify that we want the 'rethinkdb' mapping
 console.log('Mappings: ', Mappings);
 
 //now call RethinkDB mapping
 
-var Mapping = Mappings.mapping();
+var Mapping = Mappings.mapping();// call the 'rethinkdb' mapping
 console.log('Mapping: ', Mapping);
 
 var type = Mapping.type;
