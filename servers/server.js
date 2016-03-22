@@ -46,7 +46,11 @@ var Todo = Mapping.createModel("todos", {
 Todo.ensureIndex("createdAt");
 
 app.use(express.static(__dirname + '/public'));
-app.use(bodyParser());
+//DEPRECATED app.use(bodyParser());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+app.use(bodyParser.json());
 
 app.route('/todo/get').get(get);
 app.route('/todo/new').put(create);
