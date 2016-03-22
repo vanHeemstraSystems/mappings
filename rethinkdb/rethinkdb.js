@@ -24,11 +24,14 @@ var Errors = require(__dirname+'/errors.js');
 
 function RethinkDB(config) {
   console.log('Mapping rethinkdb - RethinkDB called');
+  console.log('Mapping rethinkdb - config ', config);
   var self = this;
   
   config = config || {};
   config.db = config.db || 'test'; // We need the default db to create it.
   self._config = config;
+
+  console.log('Mapping rethinkdb - self._config: ', self._config);
 
   self._options = {};
   // Option passed to each model we are going to create.
@@ -71,13 +74,13 @@ function RethinkDB(config) {
  * @return {Promise=} Returns a promise which will resolve when the database is ready.
  */
 RethinkDB.prototype.dbReady = function() {
-  console.log('RethinkDB.prototype.dbReady called');	
+  console.log('Mapping rethinkdb - RethinkDB.prototype.dbReady called');	
   var self = this;
   if (this._dbReadyPromise) return this._dbReadyPromise;
   var r = self.r;
 
-  console.log('r: ', r); // {"db": "test"}
-  console.log('self._config.db: ', self._config.db); // test
+  console.log('Mapping rethinkdb - r: ', r); // {"db": "test"}
+  console.log('Mapping rethinkdb - self._config.db: ', self._config.db); // test
 
   this._dbReadyPromise = r.dbCreate(self._config.db)
   .run()
@@ -100,7 +103,7 @@ RethinkDB.prototype.dbReady = function() {
  * @return {object} The global options of the library
  */
 RethinkDB.prototype.getOptions = function() {
-  console.log('RethinkDB.prototype.getOptions called');	
+  console.log('Mapping rethinkdb - RethinkDB.prototype.getOptions called');	
   return this._options;
 }
 
@@ -120,7 +123,7 @@ RethinkDB.prototype.getOptions = function() {
  *  - `validate` {"oncreate"|"onsave"}, default "onsave".
  */
 RethinkDB.prototype.createModel = function(name, schema, options) {
-  console.log('RethinkDB.prototype.createModel called');		
+  console.log('Mapping rethinkdb - RethinkDB.prototype.createModel called');		
   var self = this;
 
   // Make a deep copy of the options as the model may overwrite them.
@@ -148,13 +151,13 @@ RethinkDB.prototype.createModel = function(name, schema, options) {
  * testing and should not be used in other use cases.
  */
 RethinkDB.prototype._clean = function() {
-  console.log('RethinkDB.prototype._clean');	
+  console.log('Mapping rethinkdb - RethinkDB.prototype._clean');	
   this.models = {};
 }
 
 // Export the module.
 module.exports = function(config) {
-  console.log('RethinkDB module.exports - called');	
+  console.log('Mapping rethinkdb - RethinkDB module.exports - called');	
   return new RethinkDB(config);
 }
 
