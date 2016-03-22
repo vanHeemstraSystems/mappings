@@ -50,18 +50,29 @@ function RethinkDB(config) {
   self._options.validate =
     (config.validate != null) ? config.validate : 'onsave';
 
+  console.log('Mapping rethinkdb - config.r: ', config.r);
+
   if (config.r === undefined) {
-    self.r = rethinkdb(config); // WAS rethinkdbdash(config);
+    self.r = rethinkdb(config); // WAS rethinkdbdash(config); // DOES THIS WORK???
   }
   else {
     self.r = config.r;
   }
+
+  console.log('Mapping rethinkdb - self.r: ', self.r);
+  
   self.type = type;
+  console.log('Mapping rethinkdb - self.type: ', self.type);
+
   self.Query = Query;
+  console.log('Mapping rethinkdb - self.Query: ', self.Query);
+
   self.models = {};
+  console.log('Mapping rethinkdb - self.models: ', self.models);
 
   // Export errors
   self.Errors = Errors;
+  console.log('Mapping rethinkdb - self.Errors: ', self.Errors);
 
   // Initialize the database.
   self.dbReady().then().error(function(error) {
