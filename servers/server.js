@@ -1,5 +1,5 @@
 /*
- * Following the example from https://github.com/neumino/thinky
+ * Following the example from https://github.com/neumino/thinky/examples/basic-todo
  * but with our own modifications (removal of 'thinky' and 'rethinkdbdash')
  */
 
@@ -21,6 +21,9 @@ console.log(server_prefix + ' - Mappings: ', Mappings);
 
 // Call RethinkDB mapping
 console.log(server_prefix + ' - config.databases.rethinkdb: ', config.databases.rethinkdb);
+
+// NOTE: 'thinky' is from here on 'Mapping'
+
 var Mapping = Mappings.mapping(config.databases.rethinkdb);// call the 'rethinkdb' mapping, providing it with the config for rethinkdb
 console.log(server_prefix + ' - Mapping: ', Mapping);
 
@@ -30,75 +33,73 @@ console.log(server_prefix + ' - r: ', r);
 var type = Mapping.type;
 console.log(server_prefix + ' - type: ', type);
 
-// Create a model - the table is automatically created
-var Post = Mapping.createModel("Post", {
-  id: String,
-  title: String,
-  content: String,
-  idAuthor: String
-}); 
-console.log(server_prefix + ' - Post: ', Post);
-
-// You can also add constraints on the schema
-var Author = Mapping.createModel("Author", {
-  id: type.string(),      // a normal string
-  name: type.string().min(2),  // a string of at least two characters
-  email: type.string().email()  // a string that is a valid email
+// Create the model
+//WAS var Todo = thinky.createModel("todos", {
+var Todo = Mapping.createModel("todos", {
+    id: type.string(),
+    title: type.string(),
+    completed: type.boolean(),
+    createdAt: type.date().default(r.now())
 });
-console.log(server_prefix + ' - Author: ', Author);
 
-// Join the models
-Post.belongsTo(Author, "author", "idAuthor", "id");
+// Ensure that an index createdAt exists
+Todo.ensureIndex("createdAt");
 
-// Save a new post with its author.
+app.use(express.static(__dirname + '/public'));
+app.use(bodyParser());
 
-// Create a new post
-var post = new Post({
-  title: "Hello World!",
-  content: "This is an example."
-});
-console.log(server_prefix + ' - post: ', post);
+app.route('/todo/get').get(get);
+app.route('/todo/new').put(create);
+app.route('/todo/update').post(update);
+app.route('/todo/delete').post(del);
 
-// Create a new author
-var author = new Author({
-  name: "Michel",
-  email: "orphee@gmail.com"
-});
-console.log(server_prefix + ' - author: ', author);
+// Retrieve all todos
+function get(req, res, next) {
+    Todo.orderBy({index: "createdAt"}).run().then(function(result) {
+        res.send(JSON.stringify(result));
+    }).error(handleError(res));
+}
 
-// Join the documents
-post.author = author;
+// Create a new todo
+function create(req, res, next) {
+    var todo = new Todo(req.body);
+    todo.save().then(function(result) {
+        res.send(JSON.stringify(result));
+    }).error(handleError(res));
+}
 
-post.saveAll().then(function(result) {
-  /*
-  post = result = {
-    id: "0e4a6f6f-cc0c-4aa5-951a-fcfc480dd05a",
-    title: "Hello World!",
-    content: "This is an example.",
-    idAuthor: "3851d8b4-5358-43f2-ba23-f4d481358901",
-    author: {
-      id: "3851d8b4-5358-43f2-ba23-f4d481358901",
-      name: "Michel",
-      email: "orphee@gmail.com"
+// Update a todo
+function update(req, res, next) {
+    var todo = new Todo(req.body);
+    Todo.get(todo.id).update({
+       title: req.body.title,
+       completed: req.body.completed
+    }).run().then(function(todo) {
+        res.send(JSON.stringify(todo));
+    }).error(handleError(res));
+
+    // Another way to update a todo is with
+    // Todo.get(req.body.id).update(todo).execute()
+}
+
+// Delete a todo
+function del(req, res, next) {
+    Todo.get(req.body.id).run().then(function(todo) {
+        todo.delete().then(function(result) {
+            res.send("");
+        }).error(handleError(res));
+    }).error(handleError(res));
+
+    // Another way to delete a todo is with
+    // Todo.get(req.body.id).delete().execute()
+}
+
+function handleError(res) {
+    return function(error) {
+        return res.send(500, {error: error.message});
     }
-  }
-  */
-});
+}
 
-// Retrieve the post with its author.
-
-Post.get("0e4a6f6f-cc0c-4aa5-951a-fcfc480dd05a").getJoin().run().then(function(result) {
-  /*
-  result = {
-    id: "0e4a6f6f-cc0c-4aa5-951a-fcfc480dd05a",
-    title: "Hello World!",
-    content: "This is an example.",
-    idAuthor: "3851d8b4-5358-43f2-ba23-f4d481358901",
-    author: {
-      id: "3851d8b4-5358-43f2-ba23-f4d481358901",
-      name: "Michel",
-      email: "orphee@gmail.com"
-    }
-  }
-  */
-});
+// Start express
+app.listen(config.servers.express.port);
+console.log('listening on port '+config.servers.express.port);
