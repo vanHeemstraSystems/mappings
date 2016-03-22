@@ -8,15 +8,19 @@ var path = require('../../libraries/path');
 var paths = require('../../paths/paths');
 var express = require(path.join(paths.libraries, '/express.js'));
 var bodyParser = require(path.join(paths.libraries, '/body-parser.js'));
+var config = require(path.join(paths.configurations, '/configurations.js'))();// call it
+console.log('config: ', config);
+var common = config.common,
+server_prefix = common.server_prefix || 'PREFIX';
 
 var app = express();
 
+// Import mappings
 var Mappings = require(__dirname+'/../mappings.js')('RethinkDB'); // here we specify that we want the 'rethinkdb' mapping
 console.log('Mappings: ', Mappings);
 
-//now call RethinkDB mapping
-
-var Mapping = Mappings.mapping();// call the 'rethinkdb' mapping
+// Call RethinkDB mapping
+var Mapping = Mappings.mapping(config.databases.rethinkdb);// call the 'rethinkdb' mapping, providing it with the config for rethinkdb
 console.log('Mapping: ', Mapping);
 
 var type = Mapping.type;
