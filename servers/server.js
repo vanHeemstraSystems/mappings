@@ -9,22 +9,26 @@ var paths = require('../../paths/paths');
 var express = require(path.join(paths.libraries, '/express.js'));
 var bodyParser = require(path.join(paths.libraries, '/body-parser.js'));
 var config = require(path.join(paths.configurations, '/configurations.js'))();// call it
-console.log('config: ', config);
 var common = config.common,
 server_prefix = common.server_prefix || 'PREFIX';
+console.log(server_prefix + ' - config: ', config);
 
 var app = express();
 
 // Import mappings
 var Mappings = require(__dirname+'/../mappings.js')('RethinkDB'); // here we specify that we want the 'rethinkdb' mapping
-console.log('Mappings: ', Mappings);
+console.log(server_prefix + ' - Mappings: ', Mappings);
 
 // Call RethinkDB mapping
+console.log(server_prefix + ' - config.databases.rethinkdb: ', config.databases.rethinkdb);
 var Mapping = Mappings.mapping(config.databases.rethinkdb);// call the 'rethinkdb' mapping, providing it with the config for rethinkdb
-console.log('Mapping: ', Mapping);
+console.log(server_prefix + ' - Mapping: ', Mapping);
+
+var r = Mapping.r;
+console.log(server_prefix + ' - r: ', r);
 
 var type = Mapping.type;
-console.log('type: ', type);
+console.log(server_prefix + ' - type: ', type);
 
 // Create a model - the table is automatically created
 var Post = Mapping.createModel("Post", {
@@ -33,7 +37,7 @@ var Post = Mapping.createModel("Post", {
   content: String,
   idAuthor: String
 }); 
-console.log('Post: ', Post);
+console.log(server_prefix + ' - Post: ', Post);
 
 // You can also add constraints on the schema
 var Author = Mapping.createModel("Author", {
@@ -41,7 +45,7 @@ var Author = Mapping.createModel("Author", {
   name: type.string().min(2),  // a string of at least two characters
   email: type.string().email()  // a string that is a valid email
 });
-console.log('Author: ', Author);
+console.log(server_prefix + ' - Author: ', Author);
 
 // Join the models
 Post.belongsTo(Author, "author", "idAuthor", "id");
@@ -53,14 +57,14 @@ var post = new Post({
   title: "Hello World!",
   content: "This is an example."
 });
-console.log('post: ', post);
+console.log(server_prefix + ' - post: ', post);
 
 // Create a new author
 var author = new Author({
   name: "Michel",
   email: "orphee@gmail.com"
 });
-console.log('author: ', author);
+console.log(server_prefix + ' - author: ', author);
 
 // Join the documents
 post.author = author;
