@@ -665,9 +665,9 @@ Model.prototype.hasAndBelongsToMany = function(joinedModel, fieldDoc, leftKey, r
 
 
 (function() {
-  // Import rethinkdb methods //WAS Import rethinkdbdash methods
-  //WAS var Term = require('rethinkdbdash')({pool: false}).expr(1).__proto__; // WE HAVE TO REMOVE THIS REFERENCE TO rethinkdbdash
-  var Term = require(path.join(paths.libraries, '/rethinkdb.js'))({pool: false}).expr(1).__proto__;
+  // Import rethinkdbdash methods
+  //WAS var Term = require('rethinkdbdash')({pool: false}).expr(1).__proto__;
+  var Term = require(path.join(paths.libraries, '/rethinkdbdash.js'))({pool: false}).expr(1).__proto__;
   util.loopKeys(Term, function(Term, key) {
     if (!Term.hasOwnProperty(key)) return;
     if (key === 'run' || key[0] === '_') return;

@@ -732,10 +732,8 @@ Query.prototype.removeRelation = function(field, joinedDocument) {
  * Some method are slightly changed: `get`, `update`, `replace`.
  */
 
-/* TEMPORARILY COMMENTED OUT AS IT CAUSES AN ERROR
-
 (function() {
-  var Term = require(path.join(paths.libraries, '/rethinkdb.js'))({pool: false}).expr(1).__proto__; //WAS var Term = require('rethinkdbdash')({pool: false}).expr(1).__proto__;
+  var Term = require(path.join(paths.libraries, '/rethinkdbdash.js'))({pool: false}).expr(1).__proto__;
   util.loopKeys(Term, function(Term, key) {
     if (key === 'run' || key[0] === '_') return;
     // Note: We suppose that no method has an empty name
@@ -824,7 +822,6 @@ Query.prototype.removeRelation = function(field, joinedDocument) {
   });
 })();
 
-*/
 
 Query.prototype._isPointWrite = function() {
   return this._pointWrite || (Array.isArray(this._query._query) &&

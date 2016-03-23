@@ -1,6 +1,6 @@
 var path = require('../../libraries/path');
 var paths = require('../../paths/paths');
-// MOVED TO INSIDE FUNCTION var rethinkdb_the_db = require(path.join(paths.libraries, '/rethinkdb.js'));
+var rethinkdbdash = require(path.join(paths.libraries, '/rethinkdbdash.js'));
 var Promise = require(path.join(paths.libraries, '/bluebird.js'));
 var Model = require(__dirname+'/model.js');
 var util = require(__dirname+'/util.js');
@@ -53,8 +53,8 @@ function RethinkDB(config) {
   console.log('Mapping rethinkdb - config.r: ', config.r);
 
   if (config.r === undefined) {
-  //WAS self.r = rethinkdb(config); // WAS rethinkdbdash(config); // DOES NOT WORK
-    self.r = require(path.join(paths.libraries, '/rethinkdb.js')); // WORKS!!!
+    self.r = rethinkdbdash(config); // DOES IT WORK??
+    //self.r = require(path.join(paths.libraries, '/rethinkdbdash.js'))(config); // WORKS!!!
   }
   else {
     self.r = config.r;
