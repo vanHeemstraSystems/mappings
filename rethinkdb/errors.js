@@ -4,65 +4,66 @@ var util = require('util');
 var errors = module.exports = {};
 
 /**
- * The base error that all thinky related errors derive from
+ * The base error that all Mapping (WAS thinky) related errors derive from
  *
  * @constructor
  * @alias Error
  */
-errors.ThinkyError = function() {
+//WAS errors.ThinkyError = function() {
+errors.MappingError = function() {
   var tmp = Error.apply(this, arguments);
-  tmp.name = this.name = 'ThinkyError';
+  tmp.name = this.name = 'MappingError'; //WAS 'ThinkyError';
 
   this.message = tmp.message;
   if (Error.captureStackTrace)
     Error.captureStackTrace(this, this.constructor);
 };
-util.inherits(errors.ThinkyError, Error);
+util.inherits(errors.MappingError, Error); //WAS util.inherits(errors.ThinkyError, Error);
 
 /**
  * Thrown or returned when `get` returns `null`.
- * @extends ThinkyError
+ * @extends MappingError //WAS ThinkyError
  */
 errors.DocumentNotFound = function(message) {
   var errorMessage = message || "The query did not find a document and returned null.";
-  errors.ThinkyError.call(this, errorMessage);
+  errors.MappingError.call(this, errorMessage); //WAS errors.ThinkyError.call(this, errorMessage);
   this.name = 'DocumentNotFoundError';
 };
-util.inherits(errors.DocumentNotFound, errors.ThinkyError);
+util.inherits(errors.DocumentNotFound, errors.MappingError);//WAS util.inherits(errors.DocumentNotFound, errors.ThinkyError);
 
 /**
  * Thrown or returned when an in place update/replace returns an invalid document.
- * @extends ThinkyError
+ * @extends MappingError //WAS ThinkyError
  */
 errors.InvalidWrite = function(message, raw) {
-  errors.ThinkyError.call(this, message);
+  errors.MappingError.call(this, message); //WAS errors.ThinkyError.call(this, message);
   this.name = 'InvalidWriteError';
   this.raw = raw;
 };
-util.inherits(errors.InvalidWrite, errors.ThinkyError);
+util.inherits(errors.InvalidWrite, errors.MappingError); //WAS util.inherits(errors.InvalidWrite, errors.ThinkyError);
 
 /**
  * Thrown or returned when validation of a document fails.
- * @extends ThinkyError
+ * @extends MappingError //WAS ThinkyError
  */
 errors.ValidationError = function(message) {
-  errors.ThinkyError.call(this, message);
+  errors.MappingError.call(this, message); //WAS errors.ThinkyError.call(this, message);
   this.name = 'ValidationError';
 };
-util.inherits(errors.ValidationError, errors.ThinkyError);
+util.inherits(errors.ValidationError, errors.MappingError); //WAS util.inherits(errors.ValidationError, errors.ThinkyError);
 
 /**
  * Thrown or returned when the primary key unique document constraint fails.
- * @extends ThinkyError
+ * @extends MappingError //WAS ThinkyError
  */
 errors.DuplicatePrimaryKey = function(message, primaryKey) {
-  errors.ThinkyError.call(this, message);
+  errors.MappingError.call(this, message); //WAS errors.ThinkyError.call(this, message);
   this.name = 'DuplicatePrimaryKeyError';
   if (primaryKey !== undefined) {
     this.primaryKey = primaryKey;
   }
 };
-util.inherits(errors.DuplicatePrimaryKey, errors.ThinkyError);
+util.inherits(errors.DuplicatePrimaryKey, errors.MappingError); //WAS util.inherits(errors.DuplicatePrimaryKey, errors.ThinkyError);
 
 /**
  * regular expressions used to determine which errors should be thrown
@@ -85,5 +86,5 @@ errors.create = function(errorOrMessage) {
     return errorOrMessage;
   }
 
-  return new errors.ThinkyError(errorOrMessage);
+  return new errors.MappingError(errorOrMessage); //WAS errors.ThinkyError(errorOrMessage);
 };

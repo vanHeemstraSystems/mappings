@@ -41,6 +41,8 @@ var Todo = Mapping.createModel("todos", {
     completed: type.boolean(),
     createdAt: type.date().default(r.now())
 });
+console.log(server_prefix + ' - Todo: ', Todo);
+
 
 // Ensure that an index createdAt exists
 Todo.ensureIndex("createdAt");
@@ -59,49 +61,49 @@ app.route('/todo/delete').post(del);
 
 // Retrieve all todos
 function get(req, res, next) {
-    Todo.orderBy({index: "createdAt"}).run().then(function(result) {
-        res.send(JSON.stringify(result));
-    }).error(handleError(res));
+  Todo.orderBy({index: "createdAt"}).run().then(function(result) {
+    res.send(JSON.stringify(result));
+  }).error(handleError(res));
 }
 
 // Create a new todo
 function create(req, res, next) {
-    var todo = new Todo(req.body);
-    todo.save().then(function(result) {
-        res.send(JSON.stringify(result));
-    }).error(handleError(res));
+  var todo = new Todo(req.body);
+  todo.save().then(function(result) {
+    res.send(JSON.stringify(result));
+  }).error(handleError(res));
 }
 
 // Update a todo
 function update(req, res, next) {
-    var todo = new Todo(req.body);
-    Todo.get(todo.id).update({
-       title: req.body.title,
-       completed: req.body.completed
-    }).run().then(function(todo) {
-        res.send(JSON.stringify(todo));
-    }).error(handleError(res));
+  var todo = new Todo(req.body);
+  Todo.get(todo.id).update({
+    title: req.body.title,
+    completed: req.body.completed
+  }).run().then(function(todo) {
+    res.send(JSON.stringify(todo));
+  }).error(handleError(res));
 
-    // Another way to update a todo is with
-    // Todo.get(req.body.id).update(todo).execute()
+  // Another way to update a todo is with
+  // Todo.get(req.body.id).update(todo).execute()
 }
 
 // Delete a todo
 function del(req, res, next) {
-    Todo.get(req.body.id).run().then(function(todo) {
-        todo.delete().then(function(result) {
-            res.send("");
-        }).error(handleError(res));
+  Todo.get(req.body.id).run().then(function(todo) {
+    todo.delete().then(function(result) {
+      res.send("");
     }).error(handleError(res));
+  }).error(handleError(res));
 
-    // Another way to delete a todo is with
-    // Todo.get(req.body.id).delete().execute()
+  // Another way to delete a todo is with
+  // Todo.get(req.body.id).delete().execute()
 }
 
 function handleError(res) {
-    return function(error) {
-        return res.send(500, {error: error.message});
-    }
+  return function(error) {
+    return res.send(500, {error: error.message});
+  }
 }
 
 // Start express

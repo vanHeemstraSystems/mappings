@@ -10,15 +10,16 @@ var Promise = require(path.join(paths.libraries, '/bluebird.js'));
 var Errors = require(__dirname+'/errors.js');
 
 /*
- * Constructor for a Model. Note that this is not what `thinky.createModel`
- * returns. It is the prototype of what `thinky.createModel` returns.
+ * Constructor for a Model. Note that this is not what `Mapping.createModel` //WAS `thinky.createModel`
+ * returns. It is the prototype of what `Mapping.createModel` returns. //WAS `thinky.createModel` returns.
  * The whole chain being:
  * document.__proto__ = new Document(...)
- * document.__proto__.constructor = model (returned by thinky.createModel
+ * document.__proto__.constructor = model (returned by Mapping.createModel //WAS thinky.createModel
  * document.__proto__._model = instance of Model
  * document.__proto__.constructor.__proto__ = document.__proto__._model
  */
-function Model(name, schema, options, thinky) {
+//WAS function Model(name, schema, options, thinky) {
+function Model(name, schema, options, Mapping) {
   /**
    * Name of the table used
    * @type {string}
@@ -28,11 +29,11 @@ function Model(name, schema, options, thinky) {
   // We want a deep copy
   options = options || {};
   this._options = {};
-  this._options.enforce_missing = (options.enforce_missing != null) ? options.enforce_missing : thinky._options.enforce_missing;
-  this._options.enforce_extra = (options.enforce_extra != null) ? options.enforce_extra : thinky._options.enforce_extra;
-  this._options.enforce_type = (options.enforce_type != null) ? options.enforce_type : thinky._options.enforce_type;
-  this._options.timeFormat = (options.timeFormat != null) ? options.timeFormat : thinky._options.timeFormat;
-  this._options.validate = (options.validate != null) ? options.validate : thinky._options.validate;
+  this._options.enforce_missing = (options.enforce_missing != null) ? options.enforce_missing : Mapping._options.enforce_missing; //WAS thinky._options.enforce_missing;
+  this._options.enforce_extra = (options.enforce_extra != null) ? options.enforce_extra : Mapping._options.enforce_extra; //WAS thinky._options.enforce_extra;
+  this._options.enforce_type = (options.enforce_type != null) ? options.enforce_type : Mapping._options.enforce_type; //WAS thinky._options.enforce_type;
+  this._options.timeFormat = (options.timeFormat != null) ? options.timeFormat : Mapping._options.timeFormat; //WAS thinky._options.timeFormat;
+  this._options.validate = (options.validate != null) ? options.validate : Mapping._options.validate; //WAS thinky._options.validate;
 
   this._schema = schemaUtil.parse(schema, '', this._options, this);
   //console.log(JSON.stringify(this._schema, null, 2));
@@ -45,7 +46,7 @@ function Model(name, schema, options, thinky) {
 
   this._pk = (options.pk != null) ? options.pk : 'id';
 
-  this._thinky = thinky;
+  this._Mapping = Mapping; //WAS this._thinky = thinky;
 
   this._validator = options.validator;
 
@@ -87,9 +88,10 @@ function Model(name, schema, options, thinky) {
 }
 _util.inherits(Model, EventEmitter);
 
-Model.new = function(name, schema, options, thinky) {
+//WAS Model.new = function(name, schema, options, thinky) {
+Model.new = function(name, schema, options, Mapping) {
 
-  var proto = new Model(name, schema, options, thinky);
+  var proto = new Model(name, schema, options, Mapping); //WAS new Model(name, schema, options, thinky);
   proto._initModel = options.init  !== undefined ? !!options.init : true;
 
   var model = function model(doc, options) {
@@ -201,8 +203,8 @@ Model.prototype.tableReady = function() {
   if (this._tableReadyPromise) return this._tableReadyPromise;
 
   // Create the table, or push the table name in the queue.
-  var r = model._thinky.r;
-  this._tableReadyPromise = model._thinky.dbReady()
+  var r = model._Mapping.r; //WAS model._thinky.r;
+  this._tableReadyPromise = model._Mapping.dbReady() //WAS model._thinky.dbReady()
   .then(function() {
     return r.tableCreate(model._name, {primaryKey: model._pk}).run();
   })
@@ -321,7 +323,7 @@ Model.prototype.ensureIndex = function(name, fn, opts) {
 Model.prototype._createIndex = function(name, fn, opts) {
   var model = this._getModel();
   var tableName = this.getTableName();
-  var r = model._thinky.r;
+  var r = model._Mapping.r; //WAS model._thinky.r;
 
   if (opts === undefined && util.isPlainObject(fn)) {
     opts = fn;
@@ -391,7 +393,8 @@ Model.prototype.hasOne = function(joinedModel, fieldDoc, leftKey, rightKey, opti
     throw new Error("The field `"+fieldDoc+"` is already used by another relation.");
   }
   if (fieldDoc === "_apply") {
-    throw new Error("The field `_apply` is reserved by thinky. Please use another one.");
+    //WAS throw new Error("The field `_apply` is reserved by thinky. Please use another one.");
+    throw new Error("The field `_apply` is reserved by Mapping. Please use another one.");
   }
   self._getModel()._joins[fieldDoc] = {
     model: joinedModel,
@@ -433,7 +436,8 @@ Model.prototype.belongsTo = function(joinedModel, fieldDoc, leftKey, rightKey, o
     throw new Error("The field `"+fieldDoc+"` is already used by another relation.");
   }
   if (fieldDoc === "_apply") {
-    throw new Error("The field `_apply` is reserved by thinky. Please use another one.");
+    //WAS throw new Error("The field `_apply` is reserved by thinky. Please use another one.");
+    throw new Error("The field `_apply` is reserved by Mapping. Please use another one.");
   }
 
   self._getModel()._joins[fieldDoc] = {
@@ -492,7 +496,8 @@ Model.prototype.hasMany = function(joinedModel, fieldDoc, leftKey, rightKey, opt
     throw new Error("The field `"+fieldDoc+"` is already used by another relation.");
   }
   if (fieldDoc === "_apply") {
-    throw new Error("The field `_apply` is reserved by thinky. Please use another one.");
+    //WAS throw new Error("The field `_apply` is reserved by thinky. Please use another one.");
+    throw new Error("The field `_apply` is reserved by Mapping. Please use another one.");
   }
 
   this._getModel()._joins[fieldDoc] = {
@@ -529,7 +534,7 @@ Model.prototype.hasMany = function(joinedModel, fieldDoc, leftKey, rightKey, opt
 Model.prototype.hasAndBelongsToMany = function(joinedModel, fieldDoc, leftKey, rightKey, options) {
   var self = this;
   var link, query;
-  var thinky = this._getModel()._thinky;
+  var Mapping = this._getModel()._Mapping; //WAS var thinky = this._getModel()._thinky;
   options = options || {};
 
   if ((joinedModel instanceof Model) === false) {
@@ -539,7 +544,8 @@ Model.prototype.hasAndBelongsToMany = function(joinedModel, fieldDoc, leftKey, r
     throw new Error("The field `"+fieldDoc+"` is already used by another relation.");
   }
   if (fieldDoc === "_apply") {
-    throw new Error("The field `_apply` is reserved by thinky. Please use another one.");
+    //WAS throw new Error("The field `_apply` is reserved by thinky. Please use another one.");
+    throw new Error("The field `_apply` is reserved by Mapping. Please use another one.");
   }
 
   if (this._getModel()._name < joinedModel._getModel()._name) {
@@ -556,11 +562,11 @@ Model.prototype.hasAndBelongsToMany = function(joinedModel, fieldDoc, leftKey, r
   }
 
   var linkModel;
-  if (thinky.models[link] === undefined) {
-    linkModel = thinky.createModel(link, {}); // Create a model, claim the namespace and create the table
+  if (Mapping.models[link] === undefined) { //WAS if (thinky.models[link] === undefined) {
+    linkModel = Mapping.createModel(link, {}); //WAS linkModel = thinky.createModel(link, {}); // Create a model, claim the namespace and create the table
   }
   else {
-    linkModel = thinky.models[link];
+    linkModel = Mapping.models[link]; //WAS linkModel = thinky.models[link];
   }
 
 
@@ -582,7 +588,7 @@ Model.prototype.hasAndBelongsToMany = function(joinedModel, fieldDoc, leftKey, r
   }
 
   if (options.init !== false) {
-    var r = self._getModel()._thinky.r;
+    var r = self._getModel()._Mapping.r; //WAS self._getModel()._thinky.r;
 
     var query;
     if ((this.getTableName() === joinedModel.getTableName())
@@ -657,11 +663,11 @@ Model.prototype.hasAndBelongsToMany = function(joinedModel, fieldDoc, leftKey, r
   }
 };
 
-/* TEMPORARILY COMMENTED OUT AS IT CAUSES AN ERROR
 
 (function() {
-  // Import rethinkdbdash methods
-  var Term = require('rethinkdbdash')({pool: false}).expr(1).__proto__;
+  // Import rethinkdb methods //WAS Import rethinkdbdash methods
+  //WAS var Term = require('rethinkdbdash')({pool: false}).expr(1).__proto__; // WE HAVE TO REMOVE THIS REFERENCE TO rethinkdbdash
+  var Term = require(path.join(paths.libraries, '/rethinkdb.js'))({pool: false}).expr(1).__proto__;
   util.loopKeys(Term, function(Term, key) {
     if (!Term.hasOwnProperty(key)) return;
     if (key === 'run' || key[0] === '_') return;
@@ -729,8 +735,6 @@ Model.prototype.hasAndBelongsToMany = function(joinedModel, fieldDoc, leftKey, r
   });
 })();
 
-*/
-
 Model.prototype.getJoin = function() {
   var query = new Query(this);
   return query.getJoin.apply(query, arguments)
@@ -753,7 +757,7 @@ Model.prototype.execute = function(options) {
 
 Model.prototype.save = function(docs, options) {
   var self = this;
-  var r = self._getModel()._thinky.r;
+  var r = self._getModel()._Mapping.r; //WAS self._getModel()._thinky.r;
   var isArray = Array.isArray(docs);
 
   if (!isArray) {

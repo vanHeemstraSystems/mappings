@@ -9,7 +9,7 @@ var Errors =        require(__dirname+'/errors.js');
 
 
 /**
- * Create a document of a model (returned by `thinky.createModel`).
+ * Create a document of a model (returned by `Mapping.createModel`).  // WAS `thinky.createModel`
  * @param {function} model The model of this document
  * @param {object=} options Options that can overwrite the ones of the model
  */
@@ -412,7 +412,7 @@ Document.prototype._makeSavableCopy = function() {
   var model = this._getModel(); // instance of Model
   var schema = this._getModel()._schema;
 
-  var r = this._getModel()._thinky.r;
+  var r = this._getModel()._Mapping.r; //WAS this._getModel()._thinky.r;
 
   if (this._getModel().needToGenerateFields === true){
     this._generateDefault();
@@ -621,7 +621,7 @@ Document.prototype._saveHook = function(docToSave, saveAll, savedModel, callback
   var self = this;
   var model = self._getModel(); // instance of Model
   var constructor = self.getModel();
-  var r = model._thinky.r;
+  var r = model._Mapping.r; //WAS model._thinky.r;
 
   if (util.isPlainObject(docToSave) === false) {
     docToSave = {};
@@ -697,7 +697,7 @@ Document.prototype._onSavedBelongsTo = function(
   var self = this;
   var model = self._getModel();
   var constructor = self.__proto__.constructor;
-  var r = this._getModel()._thinky.r;
+  var r = this._getModel()._Mapping.r; //WAS this._getModel()._thinky.r;
 
   util.loopKeys(belongsToKeysSaved, function(joins, key) {
     var joins = model._joins;
@@ -749,7 +749,7 @@ Document.prototype._saveSelf = function(
   var self = this;
   var model = self._getModel();
   var constructor = self.__proto__.constructor;
-  var r = this._getModel()._thinky.r;
+  var r = this._getModel()._Mapping.r; //WAS this._getModel()._thinky.r;
 
   // BelongsTo documents were saved before. We just need to copy the foreign
   // keys.
@@ -1032,7 +1032,7 @@ Document.prototype._saveLinks = function(docToSave, saveAll, resolve, reject) {
   var self = this;
   var model = self._getModel();
   var constructor = self.getModel();
-  var r = model._thinky.r;
+  var r = model._Mapping.r;//WAS model._thinky.r;
 
   var promisesLink = [];
 
@@ -1405,7 +1405,7 @@ Document.prototype._deleteHook = function(docToDelete, deleteAll, deletedDocs, d
   var self = this;
   var model = self._getModel(); // instance of Model
   var constructor = self.getModel();
-  var r = model._thinky.r;
+  var r = model._Mapping.r; //WAS model._thinky.r;
 
   var promises = [];
 
@@ -1616,7 +1616,7 @@ Document.prototype.purge = function(callback) {
   var self = this;
 
   var model = self._getModel(); // instance of Model
-  var r = model._thinky.r;
+  var r = model._Mapping.r; //WAS model._thinky.r;
 
   // Clean parent for hasOne
   // doc.otherDoc.delete()

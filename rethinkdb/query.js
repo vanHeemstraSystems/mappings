@@ -19,7 +19,7 @@ function Query(model, query, options, error) {
 
   this._model = model; // constructor of the model we should use for the results.
   if (model !== undefined) {
-    this._r = model._getModel()._thinky.r;
+    this._r = model._getModel()._Mapping.r; //WAS model._getModel()._thinky.r;
     util.loopKeys(model._getModel()._staticMethods, function(staticMethods, key) {
       (function(_key) {
         self[_key] = function() {
@@ -243,7 +243,7 @@ Query.prototype._validateQueryResult = function(result) {
       var revertPromises = [];
       var primaryKeys = [];
       var keysToValues = {};
-      var r = self._model._thinky.r;
+      var r = self._model._Mapping.r; //WAS self._model._thinky.r;
       for(var p=0; p<result.changes.length; p++) {
         // Extract the primary key of the document saved in the database
         var primaryKey = util.extractPrimaryKey(
@@ -322,7 +322,7 @@ Query.prototype._convertGroupedData = function(data) {
  */
 Query.prototype.getJoin = function(modelToGet, getAll, gotModel) {
   var self = this;
-  var r = self._model._getModel()._thinky.r;
+  var r = self._model._getModel()._Mapping.r; //WAS self._model._getModel()._thinky.r;
 
   var model = this._model;
   var joins = this._model._getModel()._joins;
@@ -476,7 +476,7 @@ Query.prototype.addRelation = function(field, joinedDocument) {
   var model = self._model;
   var joins = self._model._getModel()._joins;
   var joinedModel = joins[field].model;
-  var r = self._model._thinky.r;
+  var r = self._model._Mapping.r; //WAS self._model._thinky.r;
 
   switch (joins[field].type) {
     case 'hasOne':
@@ -599,7 +599,7 @@ Query.prototype.removeRelation = function(field, joinedDocument) {
   var model = self._model;
   var joins = self._model._getModel()._joins;
   var joinedModel = joins[field].model;
-  var r = self._model._thinky.r;
+  var r = self._model._Mapping.r; //WAS self._model._thinky.r;
 
   var query;
   switch (joins[field].type) {
@@ -741,7 +741,7 @@ Query.prototype.removeRelation = function(field, joinedDocument) {
     // Note: We suppose that no method has an empty name
     switch (key) {
       case 'get':
-        // `get` in thinky returns an error if the document is not found.
+        // `get` in Mapping returns an error if the document is not found. //WAS // `get` in thinky returns an error if the document is not found.
         // The driver currently just returns `null`.
         (function(key) {
           Query.prototype[key] = function() {
