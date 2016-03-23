@@ -61,6 +61,7 @@ app.route('/todo/delete').post(del);
 
 // Retrieve all todos
 function get(req, res, next) {
+  console.log(server_prefix + ' - Get called');
   Todo.orderBy({index: "createdAt"}).run().then(function(result) {
     res.send(JSON.stringify(result));
   }).error(handleError(res));
@@ -68,6 +69,7 @@ function get(req, res, next) {
 
 // Create a new todo
 function create(req, res, next) {
+  console.log(server_prefix + ' - Create called');
   var todo = new Todo(req.body);
   todo.save().then(function(result) {
     res.send(JSON.stringify(result));
@@ -76,6 +78,7 @@ function create(req, res, next) {
 
 // Update a todo
 function update(req, res, next) {
+  console.log(server_prefix + ' - Update called');
   var todo = new Todo(req.body);
   Todo.get(todo.id).update({
     title: req.body.title,
@@ -90,6 +93,7 @@ function update(req, res, next) {
 
 // Delete a todo
 function del(req, res, next) {
+  console.log(server_prefix + ' - Delete called');
   Todo.get(req.body.id).run().then(function(todo) {
     todo.delete().then(function(result) {
       res.send("");
@@ -101,6 +105,7 @@ function del(req, res, next) {
 }
 
 function handleError(res) {
+  console.log(server_prefix + ' - handleError called');
   return function(error) {
     return res.send(500, {error: error.message});
   }
@@ -108,4 +113,4 @@ function handleError(res) {
 
 // Start express
 app.listen(config.servers.express.port);
-console.log('listening on port '+config.servers.express.port);
+console.log(server_prefix + ' - listening on port '+config.servers.express.port);
