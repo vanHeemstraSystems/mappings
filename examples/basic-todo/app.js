@@ -7,7 +7,6 @@ var app = express();
 var config = require(__dirname+"/config.js")
 
 // Import rethinkdbdash
-//var thinky = require('thinky')(config.rethinkdb);
 var thinky = require('thinky')(config.rethinkdb);
 var r = thinky.r;
 var type = thinky.type;
