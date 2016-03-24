@@ -47,7 +47,7 @@ console.log(server_prefix + ' - Todo: ', Todo);
 // Ensure that an index createdAt exists
 Todo.ensureIndex("createdAt");
 
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/../public'));
 //DEPRECATED app.use(bodyParser());
 app.use(bodyParser.urlencoded({
   extended: true
