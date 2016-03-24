@@ -8,7 +8,14 @@ var path = require('../../libraries/path');
 var paths = require('../../paths/paths');
 var express = require(path.join(paths.libraries, '/express.js'));
 var bodyParser = require(path.join(paths.libraries, '/body-parser.js'));
-var config = require(path.join(paths.configurations, '/configurations.js'))();// call it
+var URI = require(path.join(paths.libraries, '/uri.js'));
+var resource = [];
+var scheme = 'urn'; // e.g. urn, url
+var namespaceIdentifier = 'uuid'; // e.g. uuid, http, https
+var namespaceSpecificString = '6e8bc430-9c3a-11d9-9669-0800200c9a66'; // e.g. 6e8bc430-9c3a-11d9-9669-0800200c9a66, //example.org/foo?bar=baz
+var uri = new URI(scheme+':'+namespaceIdentifier+':'+namespaceSpecificString);
+resource.URI = uri;
+var config = require(path.join(paths.configurations, '/configurations.js'))(resource);// call it
 var common = config.common,
 server_prefix = common.server_prefix || 'PREFIX';
 console.log(server_prefix + ' - config: ', config);
