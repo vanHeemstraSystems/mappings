@@ -9,18 +9,21 @@ var paths = require('../../paths/paths');
 var express = require(path.join(paths.libraries, '/express.js'));
 var bodyParser = require(path.join(paths.libraries, '/body-parser.js'));
 var URI = require(path.join(paths.libraries, '/uri.js'));
-var resource = [];
+var resource = {};
 var scheme = 'urn'; // e.g. urn, url
 var namespaceIdentifier = 'uuid'; // e.g. uuid, http, https
 var namespaceSpecificString = '6e8bc430-9c3a-11d9-9669-0800200c9a66'; // e.g. 6e8bc430-9c3a-11d9-9669-0800200c9a66, //example.org/foo?bar=baz
 var uri = new URI(scheme+':'+namespaceIdentifier+':'+namespaceSpecificString);
+//console.log('Mappings Server - uri: ', uri);
 resource.URI = uri;
+//console.log('Mappings Server - resource.URI: ', resource.URI);
 var config = require(path.join(paths.configurations, '/configurations.js'))(resource);// call it
-var common = config.common,
+//var common = config.common,
+var common = {server_prefix: 'CORE'}, // temp
 server_prefix = common.server_prefix || 'PREFIX';
 console.log(server_prefix + ' - config: ', config);
 
-var app = express();
+var server = express();
 
 // Import mappings
 var Mappings = require(__dirname+'/../mappings.js')('RethinkDB'); // here we specify that we want the 'rethinkdb' mapping
@@ -54,17 +57,17 @@ console.log(server_prefix + ' - Todo: ', Todo);
 // Ensure that an index createdAt exists
 Todo.ensureIndex("createdAt");
 
-app.use(express.static(__dirname + '/../publications'));
-//DEPRECATED app.use(bodyParser());
-app.use(bodyParser.urlencoded({
+server.use(express.static(__dirname + '/../publications'));
+//DEPRECATED server.use(bodyParser());
+server.use(bodyParser.urlencoded({
   extended: true
 }));
-app.use(bodyParser.json());
+server.use(bodyParser.json());
 
-app.route('/todo/get').get(get);
-app.route('/todo/new').put(create);
-app.route('/todo/update').post(update);
-app.route('/todo/delete').post(del);
+server.route('/todo/get').get(get);
+server.route('/todo/new').put(create);
+server.route('/todo/update').post(update);
+server.route('/todo/delete').post(del);
 
 // Retrieve all todos
 function get(req, res, next) {
@@ -119,5 +122,5 @@ function handleError(res) {
 }
 
 // Start express
-app.listen(config.servers.express.port);
+server.listen(config.servers.express.port);
 console.log(server_prefix + ' - listening on port '+config.servers.express.port);
