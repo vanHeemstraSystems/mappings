@@ -17,7 +17,7 @@ var URI = require(path.join(paths.libraries, '/uri.js'));
 var resource = {};
 var scheme = 'urn'; // e.g. urn, url
 var namespaceIdentifier = 'uuid'; // e.g. uuid, http, https
-var namespaceSpecificString = '6e8bc430-9c3a-11d9-9669-0800200c9a66'; // e.g. 6e8bc430-9c3a-11d9-9669-0800200c9a66, //example.org/foo?bar=baz
+var namespaceSpecificString = '6e8bc430-9c3a-11d9-9669-0800200c9a66'; // e.g. 6e8bc430-9c3a-11d9-9669-0800200c9a66 or example.org/foo?bar=baz
 var uri = new URI(scheme+':'+namespaceIdentifier+':'+namespaceSpecificString);
 var configurations = require(path.join(paths.configurations, '/configurations.js')); // A function that returns a Promise
 resource.URI = uri;
