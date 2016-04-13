@@ -15,7 +15,7 @@ module.exports = function(input) {
   return new Promise(function(resolve) {
     console.log('paths - inside Promise');
     var paths = require('../paths/paths');
-    _Me = paths;
-    resolve(_Me);
+    _Me.paths = paths;
+    resolve(_Me.paths); // Note: return only the paths property
   }); // eof Promise
 }
