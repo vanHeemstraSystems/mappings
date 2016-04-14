@@ -14,11 +14,11 @@
  */
 
 // Import express and co
-var path = require('../../libraries/path');
-var paths = require('../../paths/paths');
-var express = require(path.join(paths.libraries, '/express.js'));
-var bodyParser = require(path.join(paths.libraries, '/body-parser.js'));
-var Promise = require(path.join(paths.libraries, '/bluebird.js'));
+var path = require('../../libraries/path'); // change this to getting the library from the proxy
+var paths = require('../../paths/paths'); // change this to getting the paths from the proxy
+var express = require(path.join(paths.libraries, '/express.js')); // change this to getting the library from the proxy
+var bodyParser = require(path.join(paths.libraries, '/body-parser.js')); // change this to getting the library from the proxy
+var Promise = require(path.join(paths.libraries, '/bluebird.js')); // change this to getting the library from the proxy
 var resource = {}; // placeholder
 
 // process.argv is an array containing the command line arguments. 
@@ -66,104 +66,140 @@ process.argv.forEach(function (val, index, array) {
 							var server = express();
 
 							// Import mappings
-							var Mappings = require(__dirname+'/../mappings.js')('RethinkDB'); // here we specify that we want the 'rethinkdb' mapping
-							console.log(server_prefix + ' - Mappings: ', Mappings);
+						//	var Mappings = require(__dirname+'/../mappings.js')('RethinkDB'); // here we specify that we want the 'rethinkdb' mapping
+						//	console.log(server_prefix + ' - Mappings: ', Mappings);
 
-							// Call RethinkDB mapping
-							console.log(server_prefix + ' - configurations.databases.rethinkdb: ', configurations.databases.rethinkdb);
+							// handle mappings like configurations, as a function that returns a promise
+                            var mappings = require(path.join(paths.mappings, 'mappings.js')); // A function that returns a Promise
+                            var mapping = 'rethinkdb'; // here we specify that we want the 'rethinkdb' mapping
+                            mappings(mapping)
+                              .then(function(mappings) {
 
-							// NOTE: 'thinky' is from here on 'Mapping'
+							    var server_prefix = configurations.common.server_prefix || 'PREFIX';
+							    console.log(server_prefix + ' - mappings: ', mappings);
 
-							var Mapping = Mappings.mapping(configurations.databases.rethinkdb);// call the 'rethinkdb' mapping, providing it with the config for rethinkdb
-							console.log(server_prefix + ' - Mapping: ', Mapping);
+                                console.log('++++++++++++++++++++++++++++ LOG POINT server 0 ++++++++++++++++++++++++++++');
 
-							var r = Mapping.r;
-							console.log(server_prefix + ' - r: ', r);
 
-							var type = Mapping.type;
-							console.log(server_prefix + ' - type: ', type);
+							    // AMEND FROM BELOW HERE ....
 
-							// Create the model
-							//WAS var Todo = thinky.createModel("todos", {
-							var Todo = Mapping.createModel("todos", {
-							    id: type.string(),
-							    title: type.string(),
-							    completed: type.boolean(),
-							    createdAt: type.date().default(r.now())
-							});
-							console.log(server_prefix + ' - Todo: ', Todo);
+                                // Call RethinkDB mapping
+								console.log(server_prefix + ' - configurations.databases.rethinkdb: ', configurations.databases.rethinkdb);
 
-							// Ensure that an index createdAt exists
-							Todo.ensureIndex("createdAt");
+								// NOTE: 'thinky' is from here on 'Mapping'
 
-							server.use(express.static(__dirname + '/../publications'));
-							//DEPRECATED server.use(bodyParser());
-							server.use(bodyParser.urlencoded({
-							  extended: true
-							}));
-							server.use(bodyParser.json());
+	                            console.log('++++++++++++++++++++++++++++ LOG POINT server 1 ++++++++++++++++++++++++++++');
 
-							server.route('/todo/get').get(get);
-							server.route('/todo/new').put(create);
-							server.route('/todo/update').post(update);
-							server.route('/todo/delete').post(del);
 
-							// Retrieve all todos
-							function get(req, res, next) {
-							  console.log(server_prefix + ' - Get called');
-							  Todo.orderBy({index: "createdAt"}).run().then(function(result) {
-							    res.send(JSON.stringify(result));
-							  }).error(handleError(res));
-							}
+                                // An error occurs here: 
+                                // Unhandled rejection TypeError: 
+                                // rethinkdb is not a function
+                                // at C:\Users\vanheemstraw\git\vanHeemstraSystems\mappings\rethinkdb.js:23:5
 
-							// Create a new todo
-							function create(req, res, next) {
-							  console.log(server_prefix + ' - Create called');
-							  var todo = new Todo(req.body);
-							  todo.save().then(function(result) {
-							    res.send(JSON.stringify(result));
-							  }).error(handleError(res));
-							}
+                                // Check to see if the Mappings object is valid:
+                                console.log(server_prefix + ' - Mappings: ', Mappings);
 
-							// Update a todo
-							function update(req, res, next) {
-							  console.log(server_prefix + ' - Update called');
-							  var todo = new Todo(req.body);
-							  Todo.get(todo.id).update({
-							    title: req.body.title,
-							    completed: req.body.completed
-							  }).run().then(function(todo) {
-							    res.send(JSON.stringify(todo));
-							  }).error(handleError(res));
 
-							  // Another way to update a todo is with
-							  // Todo.get(req.body.id).update(todo).execute()
-							}
 
-							// Delete a todo
-							function del(req, res, next) {
-							  console.log(server_prefix + ' - Delete called');
-							  Todo.get(req.body.id).run().then(function(todo) {
-							    todo.delete().then(function(result) {
-							      res.send("");
-							    }).error(handleError(res));
-							  }).error(handleError(res));
 
-							  // Another way to delete a todo is with
-							  // Todo.get(req.body.id).delete().execute()
-							}
 
-							function handleError(res) {
-							  console.log(server_prefix + ' - handleError called');
-							  return function(error) {
-							    return res.send(500, {error: error.message});
-							  }
-							}
 
-							// Start express
-							server.listen(configurations.servers.express.port);
-							console.log(server_prefix + ' - listening on port '+configurations.servers.express.port);
+								var Mapping = Mappings.mapping(configurations.databases.rethinkdb);// call the 'rethinkdb' mapping, providing it with the config for rethinkdb
 
+	                            //FAILS BEFORE WE COME TO HERE: require(..) is not a function
+
+								console.log(server_prefix + ' - Mapping: ', Mapping);
+
+								console.log('++++++++++++++++++++++++++++ LOG POINT server 2 ++++++++++++++++++++++++++++');
+
+								var r = Mapping.r;
+								console.log(server_prefix + ' - r: ', r);
+
+								var type = Mapping.type;
+								console.log(server_prefix + ' - type: ', type);
+
+								// Create the model
+								//WAS var Todo = thinky.createModel("todos", {
+								var Todo = Mapping.createModel("todos", {
+								    id: type.string(),
+								    title: type.string(),
+								    completed: type.boolean(),
+								    createdAt: type.date().default(r.now())
+								});
+								console.log(server_prefix + ' - Todo: ', Todo);
+
+								// Ensure that an index createdAt exists
+								Todo.ensureIndex("createdAt");
+
+								server.use(express.static(__dirname + '/../publications'));
+								//DEPRECATED server.use(bodyParser());
+								server.use(bodyParser.urlencoded({
+								  extended: true
+								}));
+								server.use(bodyParser.json());
+
+								server.route('/todo/get').get(get);
+								server.route('/todo/new').put(create);
+								server.route('/todo/update').post(update);
+								server.route('/todo/delete').post(del);
+
+								// Retrieve all todos
+								function get(req, res, next) {
+								  console.log(server_prefix + ' - Get called');
+								  Todo.orderBy({index: "createdAt"}).run().then(function(result) {
+								    res.send(JSON.stringify(result));
+								  }).error(handleError(res));
+								}
+
+								// Create a new todo
+								function create(req, res, next) {
+								  console.log(server_prefix + ' - Create called');
+								  var todo = new Todo(req.body);
+								  todo.save().then(function(result) {
+								    res.send(JSON.stringify(result));
+								  }).error(handleError(res));
+								}
+
+								// Update a todo
+								function update(req, res, next) {
+								  console.log(server_prefix + ' - Update called');
+								  var todo = new Todo(req.body);
+								  Todo.get(todo.id).update({
+								    title: req.body.title,
+								    completed: req.body.completed
+								  }).run().then(function(todo) {
+								    res.send(JSON.stringify(todo));
+								  }).error(handleError(res));
+
+								  // Another way to update a todo is with
+								  // Todo.get(req.body.id).update(todo).execute()
+								}
+
+								// Delete a todo
+								function del(req, res, next) {
+								  console.log(server_prefix + ' - Delete called');
+								  Todo.get(req.body.id).run().then(function(todo) {
+								    todo.delete().then(function(result) {
+								      res.send("");
+								    }).error(handleError(res));
+								  }).error(handleError(res));
+
+								  // Another way to delete a todo is with
+								  // Todo.get(req.body.id).delete().execute()
+								}
+
+								function handleError(res) {
+								  console.log(server_prefix + ' - handleError called');
+								  return function(error) {
+								    return res.send(500, {error: error.message});
+								  }
+								}
+
+								// Start express
+								server.listen(configurations.servers.express.port);
+								console.log(server_prefix + ' - listening on port '+configurations.servers.express.port);
+
+                              }); // eof mappings(mapping)
 						  }); // eof configurations(resource)
                       }); // eof resources(uuid)
 		        }
