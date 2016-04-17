@@ -20,11 +20,10 @@ var input = {};
 var path = require('../../libraries/path'); //TEMP hard coded
 var paths = require('../../paths/paths'); //TEMP hard coded
 var promise = require(path.join(paths.libraries, '/promise.js')); //TEMP hard coded
-
 var _proxies = require('../../proxies/proxies.js'); // A function that returns a promise
 
 var join = promise.join;
-join(_proxies(), function(proxies) {
+join(_proxies, function(proxies) {
   console.log('server - proxies: ', proxies);
   _Me.proxies = proxies;
   console.log('server - _Me: ', _Me);
