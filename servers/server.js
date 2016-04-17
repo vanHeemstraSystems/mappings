@@ -23,16 +23,13 @@ var promise = require(path.join(paths.libraries, '/promise.js')); //TEMP hard co
 var _proxies = require('../../proxies/proxies.js'); // A function that returns a promise
 
 var join = promise.join;
-join(_proxies, function(proxies) {
-  console.log('server - proxies: ', proxies);
+join(_proxies(), function(proxies) {
+  console.log('server - proxies: ', proxies); // This does show proxies as undefined :-(
   _Me.proxies = proxies;
-  console.log('server - _Me: ', _Me);
-
-
-/*
+  //console.log('server - _Me: ', _Me);
 
   // BECAUSE WE HAVE proxies NOW WE DO NO LONGER NEED THESE LINES BELOW TO IMPORT
-  var path = require('../../libraries/path'); // change this to getting the library from the proxy
+  var path = require('../../libraries/path'); // change this to getting the paths from the proxy
   var paths = require('../../paths/paths'); // change this to getting the paths from the proxy
   var express = require(path.join(paths.libraries, '/express.js')); // change this to getting the library from the proxy
   var bodyParser = require(path.join(paths.libraries, '/body-parser.js')); // change this to getting the library from the proxy
@@ -232,7 +229,5 @@ join(_proxies, function(proxies) {
 	  	  break;
 	}
   }); // forEach
-
-*/
 
 }); // eof join
