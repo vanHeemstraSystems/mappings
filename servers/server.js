@@ -16,224 +16,220 @@
 // Placeholder
 var _Me = {};
 var input = {};
-
 var path = require('../../libraries/path'); //TEMP hard coded
 var paths = require('../../paths/paths'); //TEMP hard coded
 var promise = require(path.join(paths.libraries, '/promise.js')); //TEMP hard coded
 var _proxies = require('../../proxies/proxies.js'); // A function that returns a promise
+_proxies()
+  .then(function(proxies) {
+    console.log('Server - proxies: ', proxies);
+    _Me.proxies = proxies;
 
-var join = promise.join;
-join(_proxies(), function(proxies) {
-  console.log('Server - proxies: ', proxies); // This does show proxies as undefined :-(
-  _Me.proxies = proxies;
-  //console.log('server - _Me: ', _Me);
+	// BECAUSE WE HAVE proxies NOW WE DO NO LONGER NEED THESE LINES BELOW TO IMPORT
+	var path = require('../../libraries/path'); // change this to getting the paths from the proxy
+	var paths = require('../../paths/paths'); // change this to getting the paths from the proxy
+	var express = require(path.join(paths.libraries, '/express.js')); // change this to getting the library from the proxy
+	var bodyParser = require(path.join(paths.libraries, '/body-parser.js')); // change this to getting the library from the proxy
+	//  var promise = require(path.join(paths.libraries, '/promise.js')); // change this to getting the library from the proxy
 
-  // BECAUSE WE HAVE proxies NOW WE DO NO LONGER NEED THESE LINES BELOW TO IMPORT
-  var path = require('../../libraries/path'); // change this to getting the paths from the proxy
-  var paths = require('../../paths/paths'); // change this to getting the paths from the proxy
-  var express = require(path.join(paths.libraries, '/express.js')); // change this to getting the library from the proxy
-  var bodyParser = require(path.join(paths.libraries, '/body-parser.js')); // change this to getting the library from the proxy
-//  var promise = require(path.join(paths.libraries, '/promise.js')); // change this to getting the library from the proxy
+	var resource = {}; // placeholder
 
-  var resource = {}; // placeholder
+	// process.argv is an array containing the command line arguments. 
+	// The first element will be 'node', the second element will be the name of the JavaScript file. 
+	// The next elements will be any additional command line arguments.
+	process.argv.forEach(function (val, index, array) {
+	    // index 0 will be path to and node executable
+		// index 1 will be path to and this file
+		// index 2 will be optional additional command line arguments, e.g. a JSON file {uuid:1234}	
+		// console.log(index + ': ' + val);
+		// catch the val at index 2
+		switch(index) {
+		  case 0: // node
+		        break; // eof case 0
+		  case 1: // this file
+		        break; // eof case 1
+		  case 2: // optional additional command line argument
+		        console.log('Server - additional command: ', val);
+		        try {
+				        var o = JSON.parse(val);
+				        // Handle non-exception-throwing cases:
+				        // Neither JSON.parse(false) or JSON.parse(1234) throw errors, hence the type-checking,
+				        // but... JSON.parse(null) returns 'null', and typeof null === "object", 
+				        // so we must check for that, too.
+				        if (o && typeof o === "object" && o !== null) {
+				            //return o;
+				            // now we have the object o
+				            console.log('Server - object: ', o);
+				            var uuid = o.uuid;
+				            console.log('Server - uuid: ', uuid);
+							// Get a resource, by providing its uuid
+							var resources = require(path.join(paths.resources, '/resources.js')); // A function that returns a Promise
+		                    console.log('Server - resources: ', resources);
+							resources(uuid)
+							  .then(function(resources) {
+							    resource = resources.resource;
+							    console.log('Server - resource: ', resource);
+								var configurations = require(path.join(paths.configurations, '/configurations.js')); // A function that returns a Promise
+								configurations(resource)
+								  .then(function(configurations) {  
 
-  // process.argv is an array containing the command line arguments. 
-  // The first element will be 'node', the second element will be the name of the JavaScript file. 
-  // The next elements will be any additional command line arguments.
-  process.argv.forEach(function (val, index, array) {
-    // index 0 will be path to and node executable
-	// index 1 will be path to and this file
-	// index 2 will be optional additional command line arguments, e.g. a JSON file {uuid:1234}	
-	// console.log(index + ': ' + val);
-	// catch the val at index 2
-	switch(index) {
-	  case 0: // node
-	        break; // eof case 0
-	  case 1: // this file
-	        break; // eof case 1
-	  case 2: // optional additional command line argument
-	        console.log('Server - additional command: ', val);
-	        try {
-			        var o = JSON.parse(val);
-			        // Handle non-exception-throwing cases:
-			        // Neither JSON.parse(false) or JSON.parse(1234) throw errors, hence the type-checking,
-			        // but... JSON.parse(null) returns 'null', and typeof null === "object", 
-			        // so we must check for that, too.
-			        if (o && typeof o === "object" && o !== null) {
-			            //return o;
-			            // now we have the object o
-			            console.log('Server - object: ', o);
-			            var uuid = o.uuid;
-			            console.log('Server - uuid: ', uuid);
-						// Get a resource, by providing its uuid
-						var resources = require(path.join(paths.resources, '/resources.js')); // A function that returns a Promise
-	                    console.log('Server - resources: ', resources);
-						resources(uuid)
-						  .then(function(resources) {
-						    resource = resources.resource;
-						    console.log('Server - resource: ', resource);
-							var configurations = require(path.join(paths.configurations, '/configurations.js')); // A function that returns a Promise
-							configurations(resource)
-							  .then(function(configurations) {  
+									var server_prefix = configurations.common.server_prefix || 'PREFIX';
+									console.log(server_prefix + ' - configurations: ', configurations);
 
-								var server_prefix = configurations.common.server_prefix || 'PREFIX';
-								console.log(server_prefix + ' - configurations: ', configurations);
+									var server = express();
 
-								var server = express();
+									// Import mappings
+								//	var Mappings = require(__dirname+'/../mappings.js')('RethinkDB'); // here we specify that we want the 'rethinkdb' mapping
+								//	console.log(server_prefix + ' - Mappings: ', Mappings);
 
-								// Import mappings
-							//	var Mappings = require(__dirname+'/../mappings.js')('RethinkDB'); // here we specify that we want the 'rethinkdb' mapping
-							//	console.log(server_prefix + ' - Mappings: ', Mappings);
+									// handle mappings like configurations, as a function that returns a promise
+		                            var mappings = require(path.join(paths.mappings, 'mappings.js')); // A function that returns a Promise
+		                            var mapping = 'rethinkdb'; // here we specify that we want the 'rethinkdb' mapping
+		                            mappings(mapping)
+		                              .then(function(mappings) {
 
-								// handle mappings like configurations, as a function that returns a promise
-	                            var mappings = require(path.join(paths.mappings, 'mappings.js')); // A function that returns a Promise
-	                            var mapping = 'rethinkdb'; // here we specify that we want the 'rethinkdb' mapping
-	                            mappings(mapping)
-	                              .then(function(mappings) {
+									    var server_prefix = configurations.common.server_prefix || 'PREFIX';
+									    console.log(server_prefix + ' - mappings: ', mappings);
 
-								    var server_prefix = configurations.common.server_prefix || 'PREFIX';
-								    console.log(server_prefix + ' - mappings: ', mappings);
-
-	                                console.log('++++++++++++++++++++++++++++ LOG POINT server 0 ++++++++++++++++++++++++++++');
+		                                console.log('++++++++++++++++++++++++++++ LOG POINT server 0 ++++++++++++++++++++++++++++');
 
 
-								    // AMEND FROM BELOW HERE ....
+									    // AMEND FROM BELOW HERE ....
 
-	                                // Call RethinkDB mapping
-									console.log(server_prefix + ' - configurations.databases.rethinkdb: ', configurations.databases.rethinkdb);
+		                                // Call RethinkDB mapping
+										console.log(server_prefix + ' - configurations.databases.rethinkdb: ', configurations.databases.rethinkdb);
 
-									// NOTE: 'thinky' is from here on 'Mapping'
+										// NOTE: 'thinky' is from here on 'Mapping'
 
-		                            console.log('++++++++++++++++++++++++++++ LOG POINT server 1 ++++++++++++++++++++++++++++');
+			                            console.log('++++++++++++++++++++++++++++ LOG POINT server 1 ++++++++++++++++++++++++++++');
 
 
-	                                // An error occurs here: 
-	                                // Unhandled rejection TypeError: 
-	                                // rethinkdb is not a function
-	                                // at C:\Users\vanheemstraw\git\vanHeemstraSystems\mappings\rethinkdb.js:23:5
+		                                // An error occurs here: 
+		                                // Unhandled rejection TypeError: 
+		                                // rethinkdb is not a function
+		                                // at C:\Users\vanheemstraw\git\vanHeemstraSystems\mappings\rethinkdb.js:23:5
 
-	                                // Check to see if the Mappings object is valid:
-	                                console.log(server_prefix + ' - Mappings: ', Mappings);
+		                                // Check to see if the Mappings object is valid:
+		                                console.log(server_prefix + ' - Mappings: ', Mappings);
 
 
 
 
 
 
-									var Mapping = Mappings.mapping(configurations.databases.rethinkdb);// call the 'rethinkdb' mapping, providing it with the config for rethinkdb
+										var Mapping = Mappings.mapping(configurations.databases.rethinkdb);// call the 'rethinkdb' mapping, providing it with the config for rethinkdb
 
-		                            //FAILS BEFORE WE COME TO HERE: require(..) is not a function
+			                            //FAILS BEFORE WE COME TO HERE: require(..) is not a function
 
-									console.log(server_prefix + ' - Mapping: ', Mapping);
+										console.log(server_prefix + ' - Mapping: ', Mapping);
 
-									console.log('++++++++++++++++++++++++++++ LOG POINT server 2 ++++++++++++++++++++++++++++');
+										console.log('++++++++++++++++++++++++++++ LOG POINT server 2 ++++++++++++++++++++++++++++');
 
-									var r = Mapping.r;
-									console.log(server_prefix + ' - r: ', r);
+										var r = Mapping.r;
+										console.log(server_prefix + ' - r: ', r);
 
-									var type = Mapping.type;
-									console.log(server_prefix + ' - type: ', type);
+										var type = Mapping.type;
+										console.log(server_prefix + ' - type: ', type);
 
-									// Create the model
-									//WAS var Todo = thinky.createModel("todos", {
-									var Todo = Mapping.createModel("todos", {
-									    id: type.string(),
-									    title: type.string(),
-									    completed: type.boolean(),
-									    createdAt: type.date().default(r.now())
-									});
-									console.log(server_prefix + ' - Todo: ', Todo);
+										// Create the model
+										//WAS var Todo = thinky.createModel("todos", {
+										var Todo = Mapping.createModel("todos", {
+										    id: type.string(),
+										    title: type.string(),
+										    completed: type.boolean(),
+										    createdAt: type.date().default(r.now())
+										});
+										console.log(server_prefix + ' - Todo: ', Todo);
 
-									// Ensure that an index createdAt exists
-									Todo.ensureIndex("createdAt");
+										// Ensure that an index createdAt exists
+										Todo.ensureIndex("createdAt");
 
-									server.use(express.static(__dirname + '/../publications'));
-									//DEPRECATED server.use(bodyParser());
-									server.use(bodyParser.urlencoded({
-									  extended: true
-									}));
-									server.use(bodyParser.json());
+										server.use(express.static(__dirname + '/../publications'));
+										//DEPRECATED server.use(bodyParser());
+										server.use(bodyParser.urlencoded({
+										  extended: true
+										}));
+										server.use(bodyParser.json());
 
-									server.route('/todo/get').get(get);
-									server.route('/todo/new').put(create);
-									server.route('/todo/update').post(update);
-									server.route('/todo/delete').post(del);
+										server.route('/todo/get').get(get);
+										server.route('/todo/new').put(create);
+										server.route('/todo/update').post(update);
+										server.route('/todo/delete').post(del);
 
-									// Retrieve all todos
-									function get(req, res, next) {
-									  console.log(server_prefix + ' - Get called');
-									  Todo.orderBy({index: "createdAt"}).run().then(function(result) {
-									    res.send(JSON.stringify(result));
-									  }).error(handleError(res));
-									}
+										// Retrieve all todos
+										function get(req, res, next) {
+										  console.log(server_prefix + ' - Get called');
+										  Todo.orderBy({index: "createdAt"}).run().then(function(result) {
+										    res.send(JSON.stringify(result));
+										  }).error(handleError(res));
+										}
 
-									// Create a new todo
-									function create(req, res, next) {
-									  console.log(server_prefix + ' - Create called');
-									  var todo = new Todo(req.body);
-									  todo.save().then(function(result) {
-									    res.send(JSON.stringify(result));
-									  }).error(handleError(res));
-									}
+										// Create a new todo
+										function create(req, res, next) {
+										  console.log(server_prefix + ' - Create called');
+										  var todo = new Todo(req.body);
+										  todo.save().then(function(result) {
+										    res.send(JSON.stringify(result));
+										  }).error(handleError(res));
+										}
 
-									// Update a todo
-									function update(req, res, next) {
-									  console.log(server_prefix + ' - Update called');
-									  var todo = new Todo(req.body);
-									  Todo.get(todo.id).update({
-									    title: req.body.title,
-									    completed: req.body.completed
-									  }).run().then(function(todo) {
-									    res.send(JSON.stringify(todo));
-									  }).error(handleError(res));
+										// Update a todo
+										function update(req, res, next) {
+										  console.log(server_prefix + ' - Update called');
+										  var todo = new Todo(req.body);
+										  Todo.get(todo.id).update({
+										    title: req.body.title,
+										    completed: req.body.completed
+										  }).run().then(function(todo) {
+										    res.send(JSON.stringify(todo));
+										  }).error(handleError(res));
 
-									  // Another way to update a todo is with
-									  // Todo.get(req.body.id).update(todo).execute()
-									}
+										  // Another way to update a todo is with
+										  // Todo.get(req.body.id).update(todo).execute()
+										}
 
-									// Delete a todo
-									function del(req, res, next) {
-									  console.log(server_prefix + ' - Delete called');
-									  Todo.get(req.body.id).run().then(function(todo) {
-									    todo.delete().then(function(result) {
-									      res.send("");
-									    }).error(handleError(res));
-									  }).error(handleError(res));
+										// Delete a todo
+										function del(req, res, next) {
+										  console.log(server_prefix + ' - Delete called');
+										  Todo.get(req.body.id).run().then(function(todo) {
+										    todo.delete().then(function(result) {
+										      res.send("");
+										    }).error(handleError(res));
+										  }).error(handleError(res));
 
-									  // Another way to delete a todo is with
-									  // Todo.get(req.body.id).delete().execute()
-									}
+										  // Another way to delete a todo is with
+										  // Todo.get(req.body.id).delete().execute()
+										}
 
-									function handleError(res) {
-									  console.log(server_prefix + ' - handleError called');
-									  return function(error) {
-									    return res.send(500, {error: error.message});
-									  }
-									}
+										function handleError(res) {
+										  console.log(server_prefix + ' - handleError called');
+										  return function(error) {
+										    return res.send(500, {error: error.message});
+										  }
+										}
 
-									// Start express
-									server.listen(configurations.servers.express.port);
-									console.log(server_prefix + ' - listening on port '+configurations.servers.express.port);
+										// Start express
+										server.listen(configurations.servers.express.port);
+										console.log(server_prefix + ' - listening on port '+configurations.servers.express.port);
 
-	                              }); // eof mappings(mapping)
-							  }); // eof configurations(resource)
-	                      }); // eof resources(uuid)
-			        }
-			    }
-			catch (e) { 
-	          console.log('Server - error: ', e);
-			}
-	  	    break; // eof case 2
-	  	default:
-	  	  // do nothing
-	  	  break;
-	}
-  }); // forEach
-
-}) // eof join
-.then(function() {
-    console.log('Server - then');
-}) // eof then
+		                              }); // eof mappings(mapping)
+								  }); // eof configurations(resource)
+		                      }); // eof resources(uuid)
+				        }
+				    }
+				catch (e) { 
+		          console.log('Server - error: ', e);
+				}
+		  	    break; // eof case 2
+		  	default:
+		  	  // do nothing
+		  	  break;
+		}
+	}); // forEach
+})// eof then
+.catch(function(error) {
+   console.log('Server - error: ', error);
+}) // eof catch
 .finally(function() {
     console.log('Server - finally');
 }); // eof finally
