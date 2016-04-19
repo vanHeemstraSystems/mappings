@@ -19,12 +19,15 @@ var input = {};
 var path = require('../../libraries/path'); //TEMP hard coded
 var paths = require('../../paths/paths'); //TEMP hard coded
 var promise = require(path.join(paths.libraries, '/promise.js')); //TEMP hard coded
-var _proxies = require('../../proxies/proxies.js'); // A function that returns a promise
-_proxies()
-  .then(function(proxies) {
-    console.log('Server - proxies: ', proxies);
-    _Me.proxies = proxies;
+var proxies = require('../../proxies/proxies.js'); // A function that returns a promise
+var join = promise.join;
 
+// Start of the chain
+join(proxies(), function(proxies) {
+  console.log('Server - proxies: ', proxies);
+    _Me.proxies = proxies;
+}) // eof join
+.then(function() {
 	// BECAUSE WE HAVE proxies NOW WE DO NO LONGER NEED THESE LINES BELOW TO IMPORT
 	var path = require('../../libraries/path'); // change this to getting the paths from the proxy
 	var paths = require('../../paths/paths'); // change this to getting the paths from the proxy
