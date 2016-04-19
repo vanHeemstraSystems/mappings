@@ -29,10 +29,10 @@ join(proxies(), function(proxies) {
 }) // eof join
 .then(function() {
 	// BECAUSE WE HAVE proxies NOW WE DO NO LONGER NEED THESE LINES BELOW TO IMPORT
-	var path = require('../../libraries/path'); // change this to getting the paths from the proxy
-	var paths = require('../../paths/paths'); // change this to getting the paths from the proxy
-	var express = require(path.join(paths.libraries, '/express.js')); // change this to getting the library from the proxy
-	var bodyParser = require(path.join(paths.libraries, '/body-parser.js')); // change this to getting the library from the proxy
+	//var path = require('../../libraries/path'); // change this to getting the paths from the proxy
+	//var paths = require('../../paths/paths'); // change this to getting the paths from the proxy
+	//var express = require(path.join(paths.libraries, '/express.js')); // change this to getting the library from the proxy
+	//var bodyParser = require(path.join(paths.libraries, '/body-parser.js')); // change this to getting the library from the proxy
 	//  var promise = require(path.join(paths.libraries, '/promise.js')); // change this to getting the library from the proxy
 
 	var resource = {}; // placeholder
@@ -79,7 +79,7 @@ join(proxies(), function(proxies) {
 									var server_prefix = configurations.common.server_prefix || 'PREFIX';
 									console.log(server_prefix + ' - configurations: ', configurations);
 
-									var server = express();
+									var server = _Me.proxies.libraries.express();
 
 									// Import mappings
 								//	var Mappings = require(__dirname+'/../mappings.js')('RethinkDB'); // here we specify that we want the 'rethinkdb' mapping
@@ -147,12 +147,12 @@ join(proxies(), function(proxies) {
 										// Ensure that an index createdAt exists
 										Todo.ensureIndex("createdAt");
 
-										server.use(express.static(__dirname + '/../publications'));
+										server.use(_Me.proxies.libraries.express.static(__dirname + '/../publications'));
 										//DEPRECATED server.use(bodyParser());
-										server.use(bodyParser.urlencoded({
+										server.use(_Me.proxies.libraries.bodyParser.urlencoded({
 										  extended: true
 										}));
-										server.use(bodyParser.json());
+										server.use(_Me.proxies.libraries.bodyParser.json());
 
 										server.route('/todo/get').get(get);
 										server.route('/todo/new').put(create);
