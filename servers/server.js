@@ -28,12 +28,6 @@ join(proxies(), function(proxies) {
     _Me.proxies = proxies;
 }) // eof join
 .then(function() {
-	// BECAUSE WE HAVE proxies NOW WE DO NO LONGER NEED THESE LINES BELOW TO IMPORT
-	//var path = require('../../libraries/path'); // change this to getting the paths from the proxy
-	//var paths = require('../../paths/paths'); // change this to getting the paths from the proxy
-	//var express = require(path.join(paths.libraries, '/express.js')); // change this to getting the library from the proxy
-	//var bodyParser = require(path.join(paths.libraries, '/body-parser.js')); // change this to getting the library from the proxy
-	//  var promise = require(path.join(paths.libraries, '/promise.js')); // change this to getting the library from the proxy
 
 	var resource = {}; // placeholder
 
