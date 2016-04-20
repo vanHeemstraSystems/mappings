@@ -118,7 +118,9 @@ join(proxies(), function(proxies) {
               	// TO DO: We should take the 'RethinkDB' value from the configurations instead of hard coding it here
               	join(_Me.proxies.mappings('RethinkDB'), function(mappings) { 
                   console.log('Server - mappings: ', mappings);
-                  _Me.mappings = mappings.
+                  _Me.mappings = mappings;   // TO DO: We need to provide 'config' to mappings/rethinkdb/rethinkddb module 
+                                             // Unhandled rejection ReferenceError: config is not defined
+                                             // at C:\Users\vanheemstraw\git\vanHeemstraSystems\mappings\rethinkdb\rethinkdb.js:193:48
                   return(_Me);
                 }) // eof join
 	            .catch(function(error) {
@@ -140,10 +142,11 @@ join(proxies(), function(proxies) {
 
 						    var server_prefix = configurations.common.server_prefix || 'PREFIX';
 						    console.log(server_prefix + ' - mappings: ', mappings);
+*/
 
 	                        console.log('++++++++++++++++++++++++++++ LOG POINT server 0 ++++++++++++++++++++++++++++');
 
-
+/*
 						    // AMEND FROM BELOW HERE ....
 
 	                        // Call RethinkDB mapping
