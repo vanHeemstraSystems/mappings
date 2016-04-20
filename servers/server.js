@@ -28,10 +28,6 @@ join(proxies(), function(proxies) {
   return(_Me);
 }) // eof join
 .then(function(_Me) {
-
-
-/*
-
   var resource = {}; // placeholder
   // process.argv is an array containing the command line arguments. 
   // The first element will be 'node', the second element will be the name of the JavaScript file. 
@@ -66,30 +62,72 @@ join(proxies(), function(proxies) {
 		//	var resources = require(path.join(paths.resources, '/resources.js')); // A function that returns a Promise
 	    //    console.log('Server - resources: ', resources);
 
-
             //join(resources(uuid), function(resources) {
             join(_Me.proxies.resources(uuid), function(resources) {
               console.log('Server - resources: ', resources);
               _Me.proxies.resources.resource = resources.resource;
               console.log('Server - resource: ', _Me.proxies.resources.resource);
               return(_Me);
-            }) // eof join
-
-
+            }) // eof join proxies
+/*
 		//	resources(uuid)
 		//	.then(function(resources) {
 		//	  resource = resources.resource;
 		//	  console.log('Server - resource: ', resource);
-
-
-            
+*/
+            .then(function(_Me) {
+	          return(
+	            join(_Me.proxies.configurations(_Me.proxies.resources.resource), function(configurations) {
+	              //configurations.common.server_prefix = configurations.common.server_prefix || 'PREFIX';
+		          //console.log(server_prefix + ' - configurations: ', configurations);
+				  console.log('Server - configurations: ', configurations);
+			      _Me.proxies.configurations.configurations = configurations;
+                  return(_Me);
+	            }) // eof join
+	            .catch(function(error) {
+                  console.log('Server - error: ', error);
+                }) // eof catch
+              ); // eof return
+            }) //eof then configurations
+/*            
 			  var configurations = require(path.join(paths.configurations, '/configurations.js')); // A function that returns a Promise
-
 			  configurations(resource)
 			  .then(function(configurations) {  
                 var server_prefix = configurations.common.server_prefix || 'PREFIX';
 				console.log(server_prefix + ' - configurations: ', configurations);
+*/
+            .then(function(_Me) {
+              return(
+              	join(_Me.proxies.libraries.express(), function(server) {
+              	  console.log('Server - server: ', server);
+                  _Me.server = server;
+              	  return(_Me)
+                }) // eof join
+	            .catch(function(error) {
+                  console.log('Server - error: ', error);
+                }) // eof catch                
+              ); // eof return
+            }) // eof then server
+/*
+
 				var server = _Me.proxies.libraries.express();
+
+*/
+            .then(function(_Me) {
+              return(
+              	// TO DO: We should take the 'RethinkDB' value from the configurations instead of hard coding it here
+              	join(_Me.proxies.mappings('RethinkDB'), function(mappings) { 
+                  console.log('Server - mappings: ', mappings);
+                  _Me.mappings = mappings.
+                  return(_Me);
+                }) // eof join
+	            .catch(function(error) {
+                  console.log('Server - error: ', error);
+                }) // eof catch                
+              ); // eof return
+            }); // eof then server
+
+/*				
 					// Import mappings
 					//	var Mappings = require(__dirname+'/../mappings.js')('RethinkDB'); // here we specify that we want the 'rethinkdb' mapping
 					//	console.log(server_prefix + ' - Mappings: ', Mappings);
@@ -230,9 +268,9 @@ join(proxies(), function(proxies) {
 
 	        //      }); // eof resources(uuid)
 
+*/
 
-
-	      }
+	      } // eof if
 		} // eof try
 		catch (e) { 
 		  console.log('Server - error: ', e);
@@ -244,7 +282,6 @@ join(proxies(), function(proxies) {
 	} // eof switch
   }); // forEach
 
-*/
 
 })// eof then
 .catch(function(error) {
