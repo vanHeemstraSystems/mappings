@@ -28,6 +28,10 @@ join(proxies(), function(proxies) {
   return(_Me);
 }) // eof join
 .then(function(_Me) {
+
+
+/*
+
   var resource = {}; // placeholder
   // process.argv is an array containing the command line arguments. 
   // The first element will be 'node', the second element will be the name of the JavaScript file. 
@@ -52,28 +56,41 @@ join(proxies(), function(proxies) {
 	      // but... JSON.parse(null) returns 'null', and typeof null === "object", 
 	      // so we must check for that, too.
 	      if (o && typeof o === "object" && o !== null) {
-	            //return o;
-	            // now we have the object o
-	            console.log('Server - object: ', o);
-	            var uuid = o.uuid;
-	            console.log('Server - uuid: ', uuid);
-				// Get a resource, by providing its uuid
-				var resources = require(path.join(paths.resources, '/resources.js')); // A function that returns a Promise
-	            console.log('Server - resources: ', resources);
-				resources(uuid)
-				  .then(function(resources) {
-				    resource = resources.resource;
-				    console.log('Server - resource: ', resource);
-					var configurations = require(path.join(paths.configurations, '/configurations.js')); // A function that returns a Promise
-					configurations(resource)
-					  .then(function(configurations) {  
+	        //return o;
+	        // now we have the object o
+	        console.log('Server - object: ', o);
+	        var uuid = o.uuid;
+	        console.log('Server - uuid: ', uuid);
 
-						var server_prefix = configurations.common.server_prefix || 'PREFIX';
-						console.log(server_prefix + ' - configurations: ', configurations);
+		    // Get a resource, by providing its uuid
+		//	var resources = require(path.join(paths.resources, '/resources.js')); // A function that returns a Promise
+	    //    console.log('Server - resources: ', resources);
 
-						var server = _Me.proxies.libraries.express();
 
-						// Import mappings
+            //join(resources(uuid), function(resources) {
+            join(_Me.proxies.resources(uuid), function(resources) {
+              console.log('Server - resources: ', resources);
+              _Me.proxies.resources.resource = resources.resource;
+              console.log('Server - resource: ', _Me.proxies.resources.resource);
+              return(_Me);
+            }) // eof join
+
+
+		//	resources(uuid)
+		//	.then(function(resources) {
+		//	  resource = resources.resource;
+		//	  console.log('Server - resource: ', resource);
+
+
+            
+			  var configurations = require(path.join(paths.configurations, '/configurations.js')); // A function that returns a Promise
+
+			  configurations(resource)
+			  .then(function(configurations) {  
+                var server_prefix = configurations.common.server_prefix || 'PREFIX';
+				console.log(server_prefix + ' - configurations: ', configurations);
+				var server = _Me.proxies.libraries.express();
+					// Import mappings
 					//	var Mappings = require(__dirname+'/../mappings.js')('RethinkDB'); // here we specify that we want the 'rethinkdb' mapping
 					//	console.log(server_prefix + ' - Mappings: ', Mappings);
 
@@ -209,7 +226,12 @@ join(proxies(), function(proxies) {
 
 	                      }); // eof mappings(mapping)
 					  }); // eof configurations(resource)
-	              }); // eof resources(uuid)
+
+
+	        //      }); // eof resources(uuid)
+
+
+
 	      }
 		} // eof try
 		catch (e) { 
@@ -221,6 +243,9 @@ join(proxies(), function(proxies) {
 		break;
 	} // eof switch
   }); // forEach
+
+*/
+
 })// eof then
 .catch(function(error) {
    console.log('Server - error: ', error);
