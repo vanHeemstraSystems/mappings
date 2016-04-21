@@ -1,18 +1,30 @@
 /*
- * Mappings
+ * mappings.js
  * 
- * param: mapping (e.g. 'rethinkdb')
+ * input: mapping (e.g. 'rethinkdb') - an Object
+ *
+ * output: resolve - a Promise
  */
 module.exports = function(mapping) {
-  var mapping = mapping.toLowerCase();
-  var _Mappings = {};
+  console.log('mappings - called');
+  console.log('mappings - mapping: ', mapping);
+  var _Me = {};  
   var path = require('../libraries/path');
-  var paths = require('../paths/paths');
-  //config = require(path.join(paths.configurations, '/configurations.js'))(mapping);
-  //var common = config.common,
-  var common = {server_prefix: 'CORE'}, // temp
-  server_prefix = common.server_prefix || 'PREFIX';
-  console.log(server_prefix + " - Mappings mappings required.");
-  _Mappings.mapping = require(__dirname+'/'+mapping+'.js');
-  return _Mappings;
-};//does not call itself
+  var paths = require('../paths/paths'); 
+  var promise = require(path.join(paths.libraries, '/promise.js'));
+  var _mapping = require(__dirname+'/'+mapping+'.js'); // A function that returns a Promise
+  var join = promise.join;
+  return new promise(function(resolve) {
+    join(_mapping(), function(mapping) {
+      _Me.mapping = mapping;
+    }); // eof join
+    console.log('mappings - resolve(_Me): ', _Me);
+    resolve(_Me);
+  }) // eof promise
+  .catch(function(error) {
+    console.log('mappings - error: ', error);
+  }) // eof catch
+  .finally(function() {
+    console.log('mappings - finally');
+  }); // eof finally
+} // eof module
