@@ -27,4 +27,4 @@ module.exports = function(mapping) {
   .finally(function() {
     console.log('mappings - finally');
   }); // eof finally
-} // eof module
+} // eof module 
