@@ -12,28 +12,26 @@ module.exports = function(config) {
   var path = require('../../libraries/path');
   var paths = require('../../paths/paths'); 
   var promise = require(path.join(paths.libraries, '/promise.js'));
-  var rethinkdbdash = require(path.join(paths.libraries, '/rethinkdbdash.js'));
-
-  var util = require(__dirname+'/util.js');  // This module will have to move to its own subtree
-  _Me.util = util;
-
+  var _rethinkdbdash = require(path.join(paths.libraries, '/rethinkdbdash.js')); // A function that returns a Promise
+  //var util = require(__dirname+'/util.js');  // This module will have to move to its own subtree
+  var _utilities = require(path.join(paths.utilities, '/utilities.js')); // A function that returns a Promise
   //var type = require(__dirname+'/type/index.js');  // This module will have to move to its own subtree
   var _types = require(path.join(paths.types, '/types.js')); // A function that returns a Promise
-
   //var Query = require(__dirname+'/query.js');  // This module will have to move to its own subtree
   var _queries = require(path.join(paths.queries, '/queries.js')); // A function that returns a Promise
-
-  var Errors = require(__dirname+'/errors.js');  // This module will have to move to its own subtree
-  _Me.errors = Errors;
-
+  //var Errors = require(__dirname+'/errors.js');  // This module will have to move to its own subtree
+  var _errors = require(path.join(paths.errors, '/errors.js')); // A function that returns a Promise
   var _model = "rethinkdb";
   var _models = require(path.join(paths.models, '/models.js')); // A function that returns a Promise
   var join = promise.join;
   return new promise(function(resolve) {
-    join(_models(_model), _queries(), _types(), function(models, queries, types) {
+    join(_errors(), _models(_model), _queries(), _rethinkdbdash(), _types(), function(errors, models, queries, rethinkdbdash, types, utilities) {
+      _Me.errors = errors;
       _Me.models = models;   // WAS     var Model = models.model;
       _Me.queries = queries;
+      _Me.rethinkdbdash = rethinkdbdash;
       _Me.types = types;
+      _Me.utilities = utilities;
       /**
        * Main method, create the default database.
        *
@@ -51,9 +49,59 @@ module.exports = function(config) {
         console.log('mapping rethinkdb - RethinkDB called');
         console.log('mapping rethinkdb - config ', config);
 
+	      var self = this;
+	  
+	      config = config || {};
+	      config.db = config.db || 'test'; // We need the default db to create it.
+	      self._config = config;
 
-        // more, see ORIGINAL-rethinkdb,js
+	      console.log('Mapping rethinkdb - self._config: ', self._config);
 
+	      self._options = {};
+	      // Option passed to each model we are going to create.
+	      self._options.enforce_missing =
+	        (config.enforce_missing != null) ? config.enforce_missing : false;
+	      self._options.enforce_extra =
+	        (config.enforce_extra != null) ? config.enforce_extra : "none";
+	      self._options.enforce_type =
+	        (config.enforce_type != null) ? config.enforce_type : 'loose';
+
+	      // Format of time objects returned by the database, by default we convert
+	      // them to JavaScript Dates.
+	      self._options.timeFormat =
+	        (config.timeFormat != null) ? config.timeFormat : 'native';
+	      // Option passed to each model we are going to create.
+	      self._options.validate =
+	        (config.validate != null) ? config.validate : 'onsave';
+
+	      console.log('Mapping rethinkdb - config.r: ', config.r);
+
+	      if (config.r === undefined) {
+	        self.r = rethinkdbdash(config); // DOES IT WORK??
+	        //self.r = require(path.join(paths.libraries, '/rethinkdbdash.js'))(config); // WORKS!!!
+	      }
+	      else {
+	        self.r = config.r;
+	      }
+	      console.log('Mapping rethinkdb - self.r: ', self.r);
+
+	      self.type = type;
+	      console.log('Mapping rethinkdb - self.type: ', self.type);
+
+	      self.Query = Query;
+	      console.log('Mapping rethinkdb - self.Query: ', self.Query);
+
+	      self.models = {};
+	      console.log('Mapping rethinkdb - self.models: ', self.models);
+
+	      // Export errors
+	      self.Errors = Errors;
+	      console.log('Mapping rethinkdb - self.Errors: ', self.Errors);
+
+	      // Initialize the database.
+	      self.dbReady().then().error(function(error) {
+	        throw error;
+	      });
 
       }; // eof function RethinkDB(config)
 
@@ -64,7 +112,27 @@ module.exports = function(config) {
       RethinkDB.prototype.dbReady = function() {
         console.log('mapping rethinkdb - RethinkDB.prototype.dbReady called');
 
-        // more, see ORIGINAL-rethinkdb,js 
+	      var self = this;
+	      if (this._dbReadyPromise) return this._dbReadyPromise;
+	      var r = self.r;
+
+	      console.log('Mapping rethinkdb - r: ', r); // {"db": "test"}
+	      console.log('Mapping rethinkdb - self._config.db: ', self._config.db); // test
+
+	      this._dbReadyPromise = r.dbCreate(self._config.db)
+	      .run()
+	      .error(function(error) {
+	        // The `do` is not atomic, we a concurrent query could create the database
+	        // between the time `dbList` is ran and `dbCreate` is.
+	        if (error.message.match(/^Database `.*` already exists in/)) {
+	          return;
+	        }
+
+	        // In case something went wrong here, we do not recover and throw.
+	        throw error;
+	      });
+
+	      return self._dbReadyPromise;
 
       }; // eof function RethinkDB.prototype.dbReady
 
@@ -95,9 +163,26 @@ module.exports = function(config) {
       RethinkDB.prototype.createModel = function(name, schema, options) {
         console.log('mapping rethinkdb - RethinkDB.prototype.createModel called');
 
+	      var self = this;
 
-        // more, see ORIGINAL-rethinkdb,js 
+	      // Make a deep copy of the options as the model may overwrite them.
+	      var fullOptions = util.deepCopy(this._options);
+	      options = options || {};
+	      util.loopKeys(options, function(options, key) {
+	        fullOptions[key] = options[key];
+	      });
 
+	      // Two models cannot share the same name.
+	      if (self.models[name] !== undefined) {
+	        throw new Error("Cannot redefine a Model");
+	      }
+
+	      // Create the constructor returned. This will also validate the schema.
+	      var model = Model.new(name, schema, fullOptions, self);
+
+	      // Keep a reference of this model.
+	      self.models[name] = model;
+	      return model;
 
       }; // eof function RethinkDB.prototype.createModel
 
