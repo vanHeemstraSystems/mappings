@@ -2,7 +2,7 @@ var arrayPrefix = "__array"
 module.exports.arrayPrefix = arrayPrefix;
 
 var util = require(__dirname+'/util.js');
-var type = require(__dirname+'/type/index.js');
+var type = require(__dirname+'/type/index.js'); // TO DO Now has to point to types.js!
 var Errors = require(__dirname+'/errors.js');
 
 

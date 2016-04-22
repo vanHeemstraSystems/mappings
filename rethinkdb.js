@@ -6,7 +6,7 @@
  * output: resolve - a Promise
  */
 module.exports = function() {
-  console.log('RethinkDB - called');
+  console.log('rethinkdb - called');
   var _Me = {};
   var path = require('../libraries/path');
   var paths = require('../paths/paths'); 
