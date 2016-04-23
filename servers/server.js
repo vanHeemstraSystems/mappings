@@ -17,7 +17,8 @@
 var path = require('../../libraries/path'); //TEMP hard coded
 var paths = require('../../paths/paths'); //TEMP hard coded
 var promise = require(path.join(paths.libraries, '/promise.js')); //TEMP hard coded
-var _proxies = require('../../proxies/proxies.js'); // A function that returns a promise
+//var _proxies = require('../../proxies/proxies.js'); // A function that returns a promise
+var _proxies = require(path.join(paths.proxies, '/proxies.js')); // A function that returns a promise
 var join = promise.join;
 
 // Start of the chain
