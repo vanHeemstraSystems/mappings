@@ -17,11 +17,11 @@
 var path = require('../../libraries/path'); //TEMP hard coded
 var paths = require('../../paths/paths'); //TEMP hard coded
 var promise = require(path.join(paths.libraries, '/promise.js')); //TEMP hard coded
-var proxies = require('../../proxies/proxies.js'); // A function that returns a promise
+var _proxies = require('../../proxies/proxies.js'); // A function that returns a promise
 var join = promise.join;
 
 // Start of the chain
-join(proxies(), function(proxies) {
+join(_proxies(), function(proxies) {
   console.log('Server - proxies: ', proxies);
   var _Me = {};
   _Me.proxies = proxies;
@@ -115,19 +115,16 @@ join(proxies(), function(proxies) {
 */
             .then(function(_Me) {
               return(
-              	// TO DO: We should take the 'RethinkDB' value from the configurations instead of hard coding it here
-              	join(_Me.proxies.mappings('RethinkDB'), function(mappings) { 
+              	join(_Me.proxies.mappings(), function(mappings) { 
                   console.log('Server - mappings: ', mappings);
-                  _Me.mappings = mappings;   // TO DO: We need to provide 'config' to mappings/rethinkdb/rethinkddb module 
-                                             // Unhandled rejection ReferenceError: config is not defined
-                                             // at C:\Users\vanheemstraw\git\vanHeemstraSystems\mappings\rethinkdb\rethinkdb.js:193:48
+                  _Me.mappings = mappings; // mappings contains a mapping for rethinkdb
                   return(_Me);
                 }) // eof join
 	            .catch(function(error) {
                   console.log('Server - error: ', error);
                 }) // eof catch                
               ); // eof return
-            }); // eof then server
+            }); // eof then mappings
 
 /*				
 					// Import mappings

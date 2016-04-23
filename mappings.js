@@ -11,7 +11,7 @@ module.exports = function() {
   var path = require('../libraries/path');
   var paths = require('../paths/paths'); 
   var promise = require(path.join(paths.libraries, '/promise.js'));
-  var _mapping = require(__dirname+'/mapping.js'); // change this into a function that returns a Promise
+  var _mapping = require(__dirname+'/mapping.js'); // a function that returns a Promise
   var join = promise.join;
   return new promise(function(resolve) {
     join(_mapping(), function(mapping) {

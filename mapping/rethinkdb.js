@@ -14,7 +14,7 @@
 function RethinkDB(config) {
 console.log('mapping rethinkdb - RethinkDB called');
 console.log('mapping rethinkdb - config ', config);
-
+ 
   var self = this;
 
   config = config || {};
@@ -167,5 +167,7 @@ module.exports = function(config) {
   console.log('mapping rethinkdb - config: ', config);
   return new RethinkDB(config);
 }
+
+
 // Expose rethinkdb types directly from module
-module.exports.type = type;
+//TEMP COMMENTED OUT module.exports.type = type;
