@@ -1,17 +1,18 @@
 /*
  * mappings.js
- *
- * input: input - an Object
+ * 
+ * input: mapping (e.g. 'rethinkdb') - an Object
  *
  * output: resolve - a Promise
  */
-module.exports = function() {
+module.exports = function(mapping) {
   console.log('mappings - called');
-  var _Me = {};
+  console.log('mappings - mapping: ', mapping);
+  var _Me = {};  
   var path = require('../libraries/path');
   var paths = require('../paths/paths'); 
   var promise = require(path.join(paths.libraries, '/promise.js'));
-  var _mapping = require(__dirname+'/mapping.js'); // change this into a function that returns a Promise
+  var _mapping = require(__dirname+'/'+mapping+'.js'); // A function that returns a Promise
   var join = promise.join;
   return new promise(function(resolve) {
     join(_mapping(), function(mapping) {
@@ -26,4 +27,4 @@ module.exports = function() {
   .finally(function() {
     console.log('mappings - finally');
   }); // eof finally
-} // eof module
+} // eof module 
