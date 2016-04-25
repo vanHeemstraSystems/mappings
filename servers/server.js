@@ -67,11 +67,13 @@ join(_proxies(), function(proxies) {
             var uuid = o.uuid;
             console.log('server - uuid: ', uuid);
 			// Get a resource, by providing its uuid
-            console.log('server - resource: ', proxies.proxy().resources().resource);
+            console.log('server - resource: ', proxies.proxy().resources().resource); // function () { return new ResourcesResource(); }
 
-            console.log('server - proxies.proxy().resources().resource(): ', proxies.proxy().resources().resource());
+            console.log('server - proxies.proxy().resources().resource(): ', proxies.proxy().resources().resource());  // Resource {}
 
             console.log('server - proxies.proxy().resources().resource()._6e8bc430_9c3a_11d9_9669_0800200c9a66: ', proxies.proxy().resources().resource()._6e8bc430_9c3a_11d9_9669_0800200c9a66);
+
+            console.log('server - proxies.proxy().resources().resource()._6e8bc430_9c3a_11d9_9669_0800200c9a66(): ', proxies.proxy().resources().resource()._6e8bc430_9c3a_11d9_9669_0800200c9a66());
 
 
 						//	var resources = require(path.join(paths.resources, '/resources.js')); // A function that returns a Promise
