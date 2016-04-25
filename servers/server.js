@@ -32,12 +32,7 @@ console.log('server - _proxies().proxy().libraries(): ', _proxies().proxy().libr
 console.log('server - _proxies().proxy().libraries().library: ', _proxies().proxy().libraries().library);                                        // function () { return new LibrariesLibrary(); } 
 console.log('server - _proxies().proxy().libraries().library(): ', _proxies().proxy().libraries().library());                                    // Library {}
 console.log('server - _proxies().proxy().libraries().library().path: ', _proxies().proxy().libraries().library().path);                      // function () { return new LibraryPath(); }
-//console.log('server - _proxies().proxy().libraries().library().path(): ', _proxies().proxy().libraries().library().path());                      // LibraryPath { _default: Object, _validator: undefined, _options: {} } 
-//console.log('server - _proxies().proxy().libraries().library().path().promise: ', _proxies().proxy().libraries().library().path().promise);      // function () { return this._promise; }
-//console.log('server - _proxies().proxy().libraries().library().path().promise(): ', _proxies().proxy().libraries().library().path().promise());  // a Promise, can be used like so: promise().then(function(path) { }); // eof then
-
-
-
+console.log('server - _proxies().proxy().libraries().library().path(): ', _proxies().proxy().libraries().library().path());                      // LibraryPath { _default: Object, _validator: undefined, _options: {} } 
 
 // START OF TEST AREA
 //_proxies().proxy().libraries().library().path().promise()
@@ -45,6 +40,18 @@ console.log('server - _proxies().proxy().libraries().library().path: ', _proxies
 //  console.log('server - inside path then');
 //});
 // END OF TEST AREA
+
+console.log('server - _proxies().proxy().libraries().library().promise(): ', _proxies().proxy().libraries().library().promise());
+
+var promise = _proxies().proxy().libraries().library().promise();
+var join = promise.join;
+
+//Start of the chain
+join(_proxies().proxy().resources(), function(resources) {
+  console.log('server - resources: ', resources); // Works: Resources {}
+
+});//eof join resources
+
 
 
 				// Start of the chain
