@@ -69,6 +69,9 @@ join(_proxies(), function(proxies) {
 			// Get a resource, by providing its uuid
             console.log('server - resource: ', proxies.proxy().resources().resource);
 
+            console.log('server - proxies.proxy().resources().resource(): ', proxies.proxy().resources().resource());
+
+            console.log('server - proxies.proxy().resources().resource()._6e8bc430_9c3a_11d9_9669_0800200c9a66: ', proxies.proxy().resources().resource()._6e8bc430_9c3a_11d9_9669_0800200c9a66);
 
 
 						//	var resources = require(path.join(paths.resources, '/resources.js')); // A function that returns a Promise
