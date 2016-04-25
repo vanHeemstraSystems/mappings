@@ -69,11 +69,11 @@ join(_proxies(), function(proxies) {
             uuid = o.uuid;
             console.log('server - uuid: ', uuid);
 			// Get a resource, by comparing with the uuid
-//            console.log('server - resource: ', proxies.proxy().resources().resource); // function () { return new ResourcesResource(); }
-//            console.log('server - proxies.proxy().resources().resource(): ', proxies.proxy().resources().resource());  // Resource {}
-//            console.log('server - proxies.proxy().resources().resource()._6e8bc430_9c3a_11d9_9669_0800200c9a66: ', proxies.proxy().resources().resource()._6e8bc430_9c3a_11d9_9669_0800200c9a66);
-//            console.log('server - proxies.proxy().resources().resource()._6e8bc430_9c3a_11d9_9669_0800200c9a66(): ', proxies.proxy().resources().resource()._6e8bc430_9c3a_11d9_9669_0800200c9a66());
-            var resource = proxies.proxy().resources().resource();
+//            console.log('server - resource: ', _proxies.proxy().resources().resource); // function () { return new ResourcesResource(); }
+//            console.log('server - _proxies().proxy().resources().resource(): ', _proxies().proxy().resources().resource());  // Resource {}
+//            console.log('server - _proxies().proxy().resources().resource()._6e8bc430_9c3a_11d9_9669_0800200c9a66: ', _proxies().proxy().resources().resource()._6e8bc430_9c3a_11d9_9669_0800200c9a66);
+//            console.log('server - _proxies().proxy().resources().resource()._6e8bc430_9c3a_11d9_9669_0800200c9a66(): ', _proxies().proxy().resources().resource()._6e8bc430_9c3a_11d9_9669_0800200c9a66());
+            var resource = _proxies().proxy().resources().resource();
             console.log('server - resource: ', resource);
             for (var key in resource) {
             	console.log('server - key: ', key);
@@ -112,8 +112,47 @@ join(_proxies(), function(proxies) {
   console.log('server - resourceForUuid: ', resourceForUuid); // Works: e.g. _6e8bc430_9c3a_11d9_9669_0800200c9a66 { URI: 'urn:uuid:6e8bc430-9c3a-11d9-9669-0800200c9a66' }
   // Get the configurations for resourceForUuid
   console.log('server - resourceForUuid.URI: ', resourceForUuid.URI);
+  var configurationForUuid = {};
 
 
+
+  var uuid = resourceForUuid.URI; // TO DO: extract the uuid value from the URI string !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+
+
+  console.log('server - uuid: ', uuid);
+  // Get a configuration, by comparing with the uuid
+//console.log('server - configuration: ', _proxies().proxy().configurations().configuration); // function () { return new ConfigurationsConfiguration(); }
+//console.log('server - _proxies().proxy()..configurations().configuration(): ', _proxies().proxy().configurations().configuration());  // Configuration {}
+//console.log('server - _proxies().proxy().configurations().configuration()._6e8bc430_9c3a_11d9_9669_0800200c9a66: ', _proxies().proxy().configurations().configuration()._6e8bc430_9c3a_11d9_9669_0800200c9a66);
+//console.log('server - _proxies().proxy().configurations().configuration()._6e8bc430_9c3a_11d9_9669_0800200c9a66(): ', _proxies().proxy().configurations().configuration()._6e8bc430_9c3a_11d9_9669_0800200c9a66());
+  var configuration = _proxies().proxy().configurations().configuration();
+  console.log('server - configuration: ', configuration);
+  for (var key in configuration) {
+	console.log('server - key: ', key);
+	// strip prefix _ if present on key, then substitute all _ for - if present on key
+    var keyUuid = key.replace(/^\_/, "").replace(/_/g, "\-");
+    console.log('server - keyUuid: ', keyUuid);
+    if(uuid == keyUuid) {
+      console.log('server - uuid == keyUuid');
+      // do something
+      configurationForUuid = resource[key]();
+      break;
+    }
+  }
+  console.log('server - configurationForUuid: ', configurationForUuid);
+
+  // Validate configurationForUuid
+  if(Object.keys(configurationForUuid).length == 0) {
+  	// raise an error, the resourceForUuid has not been found
+  	throw new Error("No configuration found for uuid: ", uuid); // TO FIX: for some reason the value of uuid is empty here
+  } 
+  else {
+  	return configurationForUuid;
+  };
+}) //eof then resourceForUuid
+.then(function(configurationForUuid) {
 
 
 
@@ -321,7 +360,7 @@ join(_proxies(), function(proxies) {
 
 
 
-}) // eof then resourceForUuid
+}) // eof then configurationForUuid
 .catch(function(error) {
   console.log('server - error: ', error);
 }) // eof catch
