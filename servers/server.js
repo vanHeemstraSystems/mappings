@@ -69,7 +69,7 @@ join(_proxies(), function(proxies) {
             uuid = o.uuid;
             console.log('server - uuid: ', uuid);
 			// Get a resource, by comparing with the uuid
-//            console.log('server - resource: ', _proxies.proxy().resources().resource); // function () { return new ResourcesResource(); }
+//            console.log('server - resource: ', _proxies().proxy().resources().resource); // function () { return new ResourcesResource(); }
 //            console.log('server - _proxies().proxy().resources().resource(): ', _proxies().proxy().resources().resource());  // Resource {}
 //            console.log('server - _proxies().proxy().resources().resource()._6e8bc430_9c3a_11d9_9669_0800200c9a66: ', _proxies().proxy().resources().resource()._6e8bc430_9c3a_11d9_9669_0800200c9a66);
 //            console.log('server - _proxies().proxy().resources().resource()._6e8bc430_9c3a_11d9_9669_0800200c9a66(): ', _proxies().proxy().resources().resource()._6e8bc430_9c3a_11d9_9669_0800200c9a66());
@@ -114,7 +114,24 @@ join(_proxies(), function(proxies) {
   console.log('server - resourceForUuid.URI: ', resourceForUuid.URI);
   var configurationForUuid = {};
 
+  // See also 
+  // https://medialize.github.io/URI.js/
+  // var uri = URI("urn:uuid:c5542ab6-3d96-403e-8e6b-b8bb52f48d9a?query=string");
+  // uri.protocol() == "urn";
+  // uri.path() == "uuid:c5542ab6-3d96-403e-8e6b-b8bb52f48d9a";
+  // uri.query() == "query=string";
 
+// console.log('server - library: ', _proxies().proxy().libraries().library); // function () { return new LibrariesLibrary(); }
+// console.log('server - _proxies().proxy().libraries().library(): ', _proxies().proxy().libraries().library());  // Library {}
+// console.log('server - _proxies().proxy().libraries().library().uri: ', _proxies().proxy().libraries().library().uri); // function () { return new LibraryUri(); }
+// console.log('server - _proxies().proxy().libraries().library().uri(): ', _proxies().proxy().libraries().library().uri());
+
+  var URI = _proxies().proxy().libraries().library().uri;
+  console.log('server - URI: ', URI);
+//  var uri = new URI("urn:uuid:c5542ab6-3d96-403e-8e6b-b8bb52f48d9a");
+  var uri = new URI(resourceForUuid.URI);
+
+  console.log('server - uri: ', uri);
 
   var uuid = resourceForUuid.URI; // TO DO: extract the uuid value from the URI string !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
