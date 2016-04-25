@@ -35,12 +35,9 @@ var join = promise.join;
 // Start of the chain
 join(_proxies(), function(proxies) {
   console.log('server - proxies: ', proxies); // Works: Proxies {}
-  var _Me = {}
-  _Me.proxies = proxies;
-  return(_Me);
+  return(proxies);
 }) //eof join proxies
-.then(function(_Me) { 
-  console.log('server - _Me: ', _Me);
+.then(function(proxies) {
   // process.argv is an array containing the command line arguments. 
   // The first element will be 'node', the second element will be the name of the JavaScript file. 
   // The next elements will be any additional command line arguments.
@@ -70,7 +67,7 @@ join(_proxies(), function(proxies) {
             var uuid = o.uuid;
             console.log('server - uuid: ', uuid);
 			// Get a resource, by providing its uuid
-            console.log('server - resource: ', _Me.proxies.proxy().resources().resource);
+            console.log('server - resource: ', proxies.proxy().resources().resource);
 
 
 
