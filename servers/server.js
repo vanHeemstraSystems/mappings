@@ -14,53 +14,44 @@
  */
 
 // Required modules
-//var path = require('../../libraries/path'); // Retrieve this from _proxies
-//var paths = require('../../paths/paths'); // Retrieve this from _proxies
-//var promise = require(path.join(paths.libraries, '/promise.js')); // Retrieve this from _proxies
-//var join = promise.join;
-//var _proxies = require(path.join(paths.proxies, '/proxies.js')); // A function that returns a Proxies object
 var _proxies = require('../../proxies/proxies');
 // ONLY ENDPOINTS OF _proxies ARE Promises, e.g. _proxies().proxy().libraries().library().path()
 // WE POSTPONE TO USE A Promise DOWN THE OBJECT HIERARCHY AS FAR DOWN AS FEASIBLE
 // UNTIL WE NEED THE Promise RESOLVED
-console.log('server - _proxies: ', _proxies);                                                                                                    // function () { return new Proxies(); }
-console.log('server - _proxies(): ', _proxies());                                                                                                // Proxies {}
-console.log('server - _proxies().proxy: ', _proxies().proxy);                                                                                    // function () { return new ProxiesProxy(); }
-console.log('server - _proxies().proxy(): ', _proxies().proxy());                                                                                // Proxy {}
-console.log('server - _proxies().proxy().libraries: ', _proxies().proxy().libraries);                                                            // function () { return new ProxyLibraries(); }
-console.log('server - _proxies().proxy().libraries(): ', _proxies().proxy().libraries());                                                        // Libraries {}
-console.log('server - _proxies().proxy().libraries().library: ', _proxies().proxy().libraries().library);                                        // function () { return new LibrariesLibrary(); } 
-console.log('server - _proxies().proxy().libraries().library(): ', _proxies().proxy().libraries().library());                                    // Library {}
-console.log('server - _proxies().proxy().libraries().library().path: ', _proxies().proxy().libraries().library().path);                      // function () { return new LibraryPath(); }
-console.log('server - _proxies().proxy().libraries().library().path(): ', _proxies().proxy().libraries().library().path());                      // LibraryPath { _default: Object, _validator: undefined, _options: {} } 
-
-// START OF TEST AREA
-//_proxies().proxy().libraries().library().path().promise()
-//.then(function(path) {
-//  console.log('server - inside path then');
-//});
-// END OF TEST AREA
-
-console.log('server - _proxies().proxy().libraries().library().promise(): ', _proxies().proxy().libraries().library().promise());
+// console.log('server - _proxies: ', _proxies);                                                                                                    // function () { return new Proxies(); }
+// console.log('server - _proxies(): ', _proxies());                                                                                                // Proxies {}
+// console.log('server - _proxies().proxy: ', _proxies().proxy);                                                                                    // function () { return new ProxiesProxy(); }
+// console.log('server - _proxies().proxy(): ', _proxies().proxy());                                                                                // Proxy {}
+// console.log('server - _proxies().proxy().libraries: ', _proxies().proxy().libraries);                                                            // function () { return new ProxyLibraries(); }
+// console.log('server - _proxies().proxy().libraries(): ', _proxies().proxy().libraries());                                                        // Libraries {}
+// console.log('server - _proxies().proxy().libraries().library: ', _proxies().proxy().libraries().library);                                        // function () { return new LibrariesLibrary(); } 
+// console.log('server - _proxies().proxy().libraries().library(): ', _proxies().proxy().libraries().library());                                    // Library {}
+// console.log('server - _proxies().proxy().libraries().library().path: ', _proxies().proxy().libraries().library().path);                      // function () { return new LibraryPath(); }
+// console.log('server - _proxies().proxy().libraries().library().path(): ', _proxies().proxy().libraries().library().path());                      // LibraryPath { _default: Object, _validator: undefined, _options: {} } 
+// console.log('server - _proxies().proxy().libraries().library().promise(): ', _proxies().proxy().libraries().library().promise());
 
 var promise = _proxies().proxy().libraries().library().promise();
 var join = promise.join;
 
 //Start of the chain
-join(_proxies().proxy().resources(), function(resources) {
-  console.log('server - resources: ', resources); // Works: Resources {}
+join(_proxies(), function(proxies) {
+  console.log('server - proxies: ', proxies); // Works: Proxies {}
+  var _Me = {}
+  _Me.proxies = proxies;
+  return(_Me);
+}) //eof join proxies
+.then(function(_Me) { 
+  console.log('server - _Me: ', _Me);
+  // process.argv is an array containing the command line arguments. 
+  // The first element will be 'node', the second element will be the name of the JavaScript file. 
+  // The next elements will be any additional command line arguments.
+  process.argv.forEach(function (val, index, array) {
+    
 
-});//eof join resources
+  }); // forEach
 
+}); // eof then
 
-
-				// Start of the chain
-//				join(_proxies(), function(proxies) {
-//				  console.log('server - proxies: ', proxies);
-//				  var _Me = {};
-//				  _Me.proxies = proxies;
-//				  return(_Me);
-//				}) // eof join proxies
 //				.then(function(_Me) {
 //				  var resource = {}; // placeholder
 				  // process.argv is an array containing the command line arguments. 
