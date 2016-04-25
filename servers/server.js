@@ -58,19 +58,18 @@ join(_proxies(), function(proxies) {
       case 2: // optional additional command line argument
         console.log('server - additional command: ', val);
         try {
-//						  var o = JSON.parse(val);
-					      // Handle non-exception-throwing cases:
-					      // Neither JSON.parse(false) or JSON.parse(1234) throw errors, hence the type-checking,
-					      // but... JSON.parse(null) returns 'null', and typeof null === "object", 
-					      // so we must check for that, too.
-//					      if (o && typeof o === "object" && o !== null) {
-					        //return o;
-					        // now we have the object o
-//					        console.log('server - object: ', o);
-//					        var uuid = o.uuid;
-//					        console.log('server - uuid: ', uuid);
-
-						    // Get a resource, by providing its uuid
+          var o = JSON.parse(val);
+		  // Handle non-exception-throwing cases:
+		  // Neither JSON.parse(false) or JSON.parse(1234) throw errors, hence the type-checking,
+		  // but... JSON.parse(null) returns 'null', and typeof null === "object", 
+		  // so we must check for that, too.
+	      if (o && typeof o === "object" && o !== null) {
+			//return o;
+			// now we have the object o
+            console.log('server - object: ', o);
+            var uuid = o.uuid;
+            console.log('server - uuid: ', uuid);
+			// Get a resource, by providing its uuid
 						//	var resources = require(path.join(paths.resources, '/resources.js')); // A function that returns a Promise
 					    //    console.log('Server - resources: ', resources);
 
@@ -282,7 +281,7 @@ join(_proxies(), function(proxies) {
 
 				*/
 
-//					      } // eof if
+          } // eof if
         } // eof try
         catch (e) { 
           console.log('server - error: ', e);
