@@ -14,20 +14,46 @@
  */
 
 // Required modules
-var path = require('../../libraries/path'); //TEMP hard coded
-var paths = require('../../paths/paths'); //TEMP hard coded
-var promise = require(path.join(paths.libraries, '/promise.js')); //TEMP hard coded
-//var _proxies = require('../../proxies/proxies.js'); // A function that returns a promise
-var _proxies = require(path.join(paths.proxies, '/proxies.js')); // A function that returns a promise
-var join = promise.join;
+//var path = require('../../libraries/path'); // Retrieve this from _proxies
+//var paths = require('../../paths/paths'); // Retrieve this from _proxies
+//var promise = require(path.join(paths.libraries, '/promise.js')); // Retrieve this from _proxies
+//var join = promise.join;
+//var _proxies = require(path.join(paths.proxies, '/proxies.js')); // A function that returns a Proxies object
+var _proxies = require('../../proxies/proxies');
+// ONLY ENDPOINTS OF _proxies ARE Promises, e.g. _proxies().proxy().libraries().library().path()
+// WE POSTPONE TO USE A Promise DOWN THE OBJECT HIERARCHY AS FAR DOWN AS FEASIBLE
+// UNTIL WE NEED THE Promise RESOLVED
+console.log('server - _proxies: ', _proxies);                                                                                                    // function () { return new Proxies(); }
+console.log('server - _proxies(): ', _proxies());                                                                                                // Proxies {}
+console.log('server - _proxies().proxy: ', _proxies().proxy);                                                                                    // function () { return new ProxiesProxy(); }
+console.log('server - _proxies().proxy(): ', _proxies().proxy());                                                                                // Proxy {}
+console.log('server - _proxies().proxy().libraries: ', _proxies().proxy().libraries);                                                            // function () { return new ProxyLibraries(); }
+console.log('server - _proxies().proxy().libraries(): ', _proxies().proxy().libraries());                                                        // Libraries {}
+console.log('server - _proxies().proxy().libraries().library: ', _proxies().proxy().libraries().library);                                        // function () { return new LibrariesLibrary(); } 
+console.log('server - _proxies().proxy().libraries().library(): ', _proxies().proxy().libraries().library());                                    // Library {}
+console.log('server - _proxies().proxy().libraries().library().path: ', _proxies().proxy().libraries().library().path);                          // function () { return new LibraryPath(); }
+console.log('server - _proxies().proxy().libraries().library().path(): ', _proxies().proxy().libraries().library().path());                      // LibraryPath { _default: Object, _validator: undefined, _options: {} } 
+console.log('server - _proxies().proxy().libraries().library().path().promise: ', _proxies().proxy().libraries().library().path().promise);      // function () { return this._promise; }
+console.log('server - _proxies().proxy().libraries().library().path().promise(): ', _proxies().proxy().libraries().library().path().promise());  // a Promise, can be used like so: promise().then(function(path) { }); // eof then
+
+
+
+
+// START OF TEST AREA
+_proxies().proxy().libraries().library().path().promise()
+.then(function(path) {
+  console.log('server - inside path then');
+});
+// END OF TEST AREA
+
 
 // Start of the chain
 join(_proxies(), function(proxies) {
-  console.log('Server - proxies: ', proxies);
+  console.log('server - proxies: ', proxies);
   var _Me = {};
   _Me.proxies = proxies;
   return(_Me);
-}) // eof join
+}) // eof join proxies
 .then(function(_Me) {
   var resource = {}; // placeholder
   // process.argv is an array containing the command line arguments. 
@@ -45,7 +71,7 @@ join(_proxies(), function(proxies) {
 	  case 1: // this file
 		break; // eof case 1
 	  case 2: // optional additional command line argument
-		console.log('Server - additional command: ', val);
+		console.log('server - additional command: ', val);
 		try {
 		  var o = JSON.parse(val);
 	      // Handle non-exception-throwing cases:
@@ -55,9 +81,9 @@ join(_proxies(), function(proxies) {
 	      if (o && typeof o === "object" && o !== null) {
 	        //return o;
 	        // now we have the object o
-	        console.log('Server - object: ', o);
+	        console.log('server - object: ', o);
 	        var uuid = o.uuid;
-	        console.log('Server - uuid: ', uuid);
+	        console.log('server - uuid: ', uuid);
 
 		    // Get a resource, by providing its uuid
 		//	var resources = require(path.join(paths.resources, '/resources.js')); // A function that returns a Promise
@@ -65,9 +91,9 @@ join(_proxies(), function(proxies) {
 
             //join(resources(uuid), function(resources) {
             join(_Me.proxies.resources(uuid), function(resources) {
-              console.log('Server - resources: ', resources);
+              console.log('server - resources: ', resources);
               _Me.proxies.resources.resource = resources.resource;
-              console.log('Server - resource: ', _Me.proxies.resources.resource);
+              console.log('server - resource: ', _Me.proxies.resources.resource);
               return(_Me);
             }) // eof join proxies
 /*
@@ -81,12 +107,12 @@ join(_proxies(), function(proxies) {
 	            join(_Me.proxies.configurations(_Me.proxies.resources.resource), function(configurations) {
 	              //configurations.common.server_prefix = configurations.common.server_prefix || 'PREFIX';
 		          //console.log(server_prefix + ' - configurations: ', configurations);
-				  console.log('Server - configurations: ', configurations);
+				  console.log('server - configurations: ', configurations);
 			      _Me.proxies.configurations.configurations = configurations;
                   return(_Me);
 	            }) // eof join
 	            .catch(function(error) {
-                  console.log('Server - error: ', error);
+                  console.log('server - error: ', error);
                 }) // eof catch
               ); // eof return
             }) //eof then configurations
@@ -100,12 +126,12 @@ join(_proxies(), function(proxies) {
             .then(function(_Me) {
               return(
               	join(_Me.proxies.libraries.express(), function(server) {
-              	  console.log('Server - server: ', server);
+              	  console.log('server - server: ', server);
                   _Me.server = server;
               	  return(_Me)
                 }) // eof join
 	            .catch(function(error) {
-                  console.log('Server - error: ', error);
+                  console.log('server - error: ', error);
                 }) // eof catch                
               ); // eof return
             }) // eof then server
@@ -117,12 +143,12 @@ join(_proxies(), function(proxies) {
             .then(function(_Me) {
               return(
               	join(_Me.proxies.mappings(), function(mappings) { 
-                  console.log('Server - mappings: ', mappings);
+                  console.log('server - mappings: ', mappings);
                   _Me.mappings = mappings; // mappings contains a mapping for rethinkdb
                   return(_Me);
                 }) // eof join
 	            .catch(function(error) {
-                  console.log('Server - error: ', error);
+                  console.log('server - error: ', error);
                 }) // eof catch                
               ); // eof return
             }); // eof then mappings
@@ -274,7 +300,7 @@ join(_proxies(), function(proxies) {
 	      } // eof if
 		} // eof try
 		catch (e) { 
-		  console.log('Server - error: ', e);
+		  console.log('server - error: ', e);
 		} // eof catch
 		break; // eof case 2
 	  default:
@@ -286,8 +312,8 @@ join(_proxies(), function(proxies) {
 
 })// eof then
 .catch(function(error) {
-   console.log('Server - error: ', error);
+   console.log('server - error: ', error);
 }) // eof catch
 .finally(function() {
-    console.log('Server - finally');
+    console.log('server - finally');
 }); // eof finally
