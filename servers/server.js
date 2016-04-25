@@ -46,23 +46,11 @@ join(_proxies(), function(proxies) {
   // The first element will be 'node', the second element will be the name of the JavaScript file. 
   // The next elements will be any additional command line arguments.
   process.argv.forEach(function (val, index, array) {
-    
-
-  }); // forEach
-
-}); // eof then
-
-//				.then(function(_Me) {
-//				  var resource = {}; // placeholder
-				  // process.argv is an array containing the command line arguments. 
-				  // The first element will be 'node', the second element will be the name of the JavaScript file. 
-				  // The next elements will be any additional command line arguments.
-//				  process.argv.forEach(function (val, index, array) {
-				    // index 0 will be path to and node executable
-					// index 1 will be path to and this file
-					// index 2 will be optional additional command line arguments, e.g. a JSON file {uuid:1234}	
-					// console.log(index + ': ' + val);
-					// catch the val at index 2
+    // index 0 will be path to and node executable
+	// index 1 will be path to and this file
+	// index 2 will be optional additional command line arguments, e.g. a JSON file {uuid:1234}
+	// console.log(index + ': ' + val);
+	// catch the val at index 2
 //					switch(index) {
 //					  case 0: // node
 //						break; // eof case 0
@@ -305,13 +293,12 @@ join(_proxies(), function(proxies) {
 //					    // do nothing
 //						break;
 //					} // eof switch
-//				  }); // forEach
 
-
-//				})// eof then
-//				.catch(function(error) {
-//				   console.log('server - error: ', error);
-//				}) // eof catch
-//				.finally(function() {
-//				    console.log('server - finally');
-//				}); // eof finally
+  }); // forEach
+}) // eof then
+.catch(function(error) {
+  console.log('server - error: ', error);
+}) // eof catch
+.finally(function() {
+  console.log('server - finally');
+}); // eof finally
