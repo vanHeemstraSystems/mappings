@@ -29,11 +29,10 @@ var _proxies = require('../../proxies/proxies');
 // console.log('server - _proxies().proxy().libraries().library().path: ', _proxies().proxy().libraries().library().path);                      // function () { return new LibraryPath(); }
 // console.log('server - _proxies().proxy().libraries().library().path(): ', _proxies().proxy().libraries().library().path());                      // LibraryPath { _default: Object, _validator: undefined, _options: {} } 
 // console.log('server - _proxies().proxy().libraries().library().promise(): ', _proxies().proxy().libraries().library().promise());
-
 var promise = _proxies().proxy().libraries().library().promise();
 var join = promise.join;
 
-//Start of the chain
+// Start of the chain
 join(_proxies(), function(proxies) {
   console.log('server - proxies: ', proxies); // Works: Proxies {}
   var _Me = {}
@@ -51,14 +50,14 @@ join(_proxies(), function(proxies) {
 	// index 2 will be optional additional command line arguments, e.g. a JSON file {uuid:1234}
 	// console.log(index + ': ' + val);
 	// catch the val at index 2
-//					switch(index) {
-//					  case 0: // node
-//						break; // eof case 0
-//					  case 1: // this file
-//						break; // eof case 1
-//					  case 2: // optional additional command line argument
-//						console.log('server - additional command: ', val);
-//						try {
+    switch(index) {
+      case 0: // node
+        break; // eof case 0
+      case 1: // this file
+        break; // eof case 1
+      case 2: // optional additional command line argument
+        console.log('server - additional command: ', val);
+        try {
 //						  var o = JSON.parse(val);
 					      // Handle non-exception-throwing cases:
 					      // Neither JSON.parse(false) or JSON.parse(1234) throw errors, hence the type-checking,
@@ -284,16 +283,15 @@ join(_proxies(), function(proxies) {
 				*/
 
 //					      } // eof if
-//						} // eof try
-//						catch (e) { 
-//						  console.log('server - error: ', e);
-//						} // eof catch
-//						break; // eof case 2
-//					  default:
-//					    // do nothing
-//						break;
-//					} // eof switch
-
+        } // eof try
+        catch (e) { 
+          console.log('server - error: ', e);
+        } // eof catch
+        break; // eof case 2
+      default:
+        // do nothing
+      break;
+    } // eof switch
   }); // forEach
 }) // eof then
 .catch(function(error) {
