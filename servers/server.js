@@ -88,7 +88,6 @@ join(_proxies(), function(proxies) {
                 }
 			}
             console.log('server - resourceForUuid: ', resourceForUuid);
-            console.log('server - resourceForUuid.URI: ', resourceForUuid.URI);
           } // eof if
         } // eof try
         catch (e) { 
@@ -112,7 +111,7 @@ join(_proxies(), function(proxies) {
 .then(function(resourceForUuid) {
   console.log('server - resourceForUuid: ', resourceForUuid); // Works: e.g. _6e8bc430_9c3a_11d9_9669_0800200c9a66 { URI: 'urn:uuid:6e8bc430-9c3a-11d9-9669-0800200c9a66' }
   // Get the configurations for resourceForUuid
-  
+  console.log('server - resourceForUuid.URI: ', resourceForUuid.URI);
 
 
 
