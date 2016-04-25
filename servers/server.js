@@ -38,6 +38,8 @@ join(_proxies(), function(proxies) {
   return(proxies);
 }) //eof join proxies
 .then(function(proxies) {
+  var resourceForUuid = {};
+  var uuid = {};
   // process.argv is an array containing the command line arguments. 
   // The first element will be 'node', the second element will be the name of the JavaScript file. 
   // The next elements will be any additional command line arguments.
@@ -61,37 +63,61 @@ join(_proxies(), function(proxies) {
 		  // but... JSON.parse(null) returns 'null', and typeof null === "object", 
 		  // so we must check for that, too.
 	      if (o && typeof o === "object" && o !== null) {
-			//return o;
+			// return o;
 			// now we have the object o
             console.log('server - object: ', o);
-            var uuid = o.uuid;
+            uuid = o.uuid;
             console.log('server - uuid: ', uuid);
-			// Get a resource, by providing its uuid
-            console.log('server - resource: ', proxies.proxy().resources().resource); // function () { return new ResourcesResource(); }
+			// Get a resource, by comparing with the uuid
+//            console.log('server - resource: ', proxies.proxy().resources().resource); // function () { return new ResourcesResource(); }
+//            console.log('server - proxies.proxy().resources().resource(): ', proxies.proxy().resources().resource());  // Resource {}
+//            console.log('server - proxies.proxy().resources().resource()._6e8bc430_9c3a_11d9_9669_0800200c9a66: ', proxies.proxy().resources().resource()._6e8bc430_9c3a_11d9_9669_0800200c9a66);
+//            console.log('server - proxies.proxy().resources().resource()._6e8bc430_9c3a_11d9_9669_0800200c9a66(): ', proxies.proxy().resources().resource()._6e8bc430_9c3a_11d9_9669_0800200c9a66());
+            var resource = proxies.proxy().resources().resource();
+            console.log('server - resource: ', resource);
+            for (var key in resource) {
+            	console.log('server - key: ', key);
+            	// strip prefix _ if present on key, then substitute all _ for - if present on key
+                var keyUuid = key.replace(/^\_/, "").replace(/_/g, "\-");
+                console.log('server - keyUuid: ', keyUuid);
+                if(uuid == keyUuid) {
+                  console.log('server - uuid == keyUuid');
+                  // do something
+                  resourceForUuid = resource[key]();
+                  break;
+                }
+			}
+            console.log('server - resourceForUuid: ', resourceForUuid);
+            console.log('server - resourceForUuid.URI: ', resourceForUuid.URI);
+          } // eof if
+        } // eof try
+        catch (e) { 
+          console.log('server - error: ', e);
+        } // eof catch
+        break; // eof case 2
+      default:
+        // do nothing
+      break;
+    } // eof switch
+  }); // forEach
+  // Validate resourceForUuid
+  if(Object.keys(resourceForUuid).length == 0) {
+  	// raise an error, the resourceForUuid has not been found
+  	throw new Error("No resource found for uuid: ", uuid); // TO FIX: for some reason the value of uuid is empty here
+  } 
+  else {
+  	return resourceForUuid;
+  };
+}) //eof then proxies
+.then(function(resourceForUuid) {
+  console.log('server - resourceForUuid: ', resourceForUuid); // Works: e.g. _6e8bc430_9c3a_11d9_9669_0800200c9a66 { URI: 'urn:uuid:6e8bc430-9c3a-11d9-9669-0800200c9a66' }
+  // Get the configurations for resourceForUuid
+  
 
-            console.log('server - proxies.proxy().resources().resource(): ', proxies.proxy().resources().resource());  // Resource {}
-
-            console.log('server - proxies.proxy().resources().resource()._6e8bc430_9c3a_11d9_9669_0800200c9a66: ', proxies.proxy().resources().resource()._6e8bc430_9c3a_11d9_9669_0800200c9a66);
-
-            console.log('server - proxies.proxy().resources().resource()._6e8bc430_9c3a_11d9_9669_0800200c9a66(): ', proxies.proxy().resources().resource()._6e8bc430_9c3a_11d9_9669_0800200c9a66());
 
 
-						//	var resources = require(path.join(paths.resources, '/resources.js')); // A function that returns a Promise
-					    //    console.log('Server - resources: ', resources);
 
-				            //join(resources(uuid), function(resources) {
-//				            join(_Me.proxies.resources(uuid), function(resources) {
-//				              console.log('server - resources: ', resources);
-//				              _Me.proxies.resources.resource = resources.resource;
-//				              console.log('server - resource: ', _Me.proxies.resources.resource);
-//				              return(_Me);
-//				            }) // eof join proxies
-				/*
-						//	resources(uuid)
-						//	.then(function(resources) {
-						//	  resource = resources.resource;
-						//	  console.log('Server - resource: ', resource);
-				*/
+
 //				            .then(function(_Me) {
 //					          return(
 //					            join(_Me.proxies.configurations(_Me.proxies.resources.resource), function(configurations) {
@@ -106,6 +132,9 @@ join(_proxies(), function(proxies) {
 //				                }) // eof catch
 //				              ); // eof return
 //				            }) //eof then configurations
+
+
+
 				/*            
 							  var configurations = require(path.join(paths.configurations, '/configurations.js')); // A function that returns a Promise
 							  configurations(resource)
@@ -287,18 +316,13 @@ join(_proxies(), function(proxies) {
 
 				*/
 
-          } // eof if
-        } // eof try
-        catch (e) { 
-          console.log('server - error: ', e);
-        } // eof catch
-        break; // eof case 2
-      default:
-        // do nothing
-      break;
-    } // eof switch
-  }); // forEach
-}) // eof then
+
+
+
+
+
+
+}) // eof then resourceForUuid
 .catch(function(error) {
   console.log('server - error: ', error);
 }) // eof catch
