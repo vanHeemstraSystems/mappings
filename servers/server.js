@@ -70,6 +70,10 @@ join(_proxies(), function(proxies) {
             var uuid = o.uuid;
             console.log('server - uuid: ', uuid);
 			// Get a resource, by providing its uuid
+            console.log('server - resource: ', _Me.proxies.proxy().resources().resource);
+
+
+
 						//	var resources = require(path.join(paths.resources, '/resources.js')); // A function that returns a Promise
 					    //    console.log('Server - resources: ', resources);
 
