@@ -189,14 +189,12 @@ join(_proxies(), function(proxies) {
   var server_prefix = configurationForUuid.common().server_prefix() || 'PREFIX';
   console.log('server - server_prefix: ', server_prefix);
 
-  var serversExpress = configurationForUuid.servers().express();
-  console.log('server - servers().express(): ', serversExpress);
+  var serversServer = configurationForUuid.servers().server();
+  console.log('server - servers().server(): ', serversServer);
 
-  var serversExpressHost = serversExpress.host(); // host is not a function... fix this!
-  console.log('server - serversExpress.host(): ', serversExpressHost);
+  var serversServerExpress = configurationForUuid.servers().server().express(); // express is not a function
+  console.log('server - servers().server().express(): ', serversServerExpress);
 
-//  var serversExpressHost = configurationForUuid.servers().express().host(); // host is not a function... fix this!
-//  console.log('server - servers().express().host(): ', serversExpressHost);
 
 
 
