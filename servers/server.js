@@ -212,25 +212,11 @@ join(_proxies(), function(proxies) {
   // Get the express library
   var express = _proxies().proxy().libraries().library().express();
   console.log('server - express: ', express);
+  // Assign express to the server
+  var server = express(); // [TypeError: Cannot read property 'statusCode' of undefined]  FIX THIS !!
+  console.log('server - server: ', server);
 
 
-//				            .then(function(_Me) {
-//				              return(
-//				              	join(_Me.proxies.libraries.express(), function(server) {
-//				              	  console.log('server - server: ', server);
-//				                  _Me.server = server;
-//				              	  return(_Me)
-//				                }) // eof join
-//					            .catch(function(error) {
-//				                  console.log('server - error: ', error);
-//				                }) // eof catch                
-//				              ); // eof return
-//				            }) // eof then server
-				/*
-
-								var server = _Me.proxies.libraries.express();
-
-				*/
 //				            .then(function(_Me) {
 //				              return(
 //				              	join(_Me.proxies.mappings(), function(mappings) { 
