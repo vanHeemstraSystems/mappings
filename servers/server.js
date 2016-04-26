@@ -113,37 +113,29 @@ join(_proxies(), function(proxies) {
   // Get the configurations for resourceForUuid
   console.log('server - resourceForUuid.URI: ', resourceForUuid.URI);
   var configurationForUuid = {};
-
   // See also 
   // https://medialize.github.io/URI.js/
   // var uri = URI("urn:uuid:c5542ab6-3d96-403e-8e6b-b8bb52f48d9a?query=string");
   // uri.protocol() == "urn";
   // uri.path() == "uuid:c5542ab6-3d96-403e-8e6b-b8bb52f48d9a";
   // uri.query() == "query=string";
-
-// console.log('server - library: ', _proxies().proxy().libraries().library); // function () { return new LibrariesLibrary(); }
-// console.log('server - _proxies().proxy().libraries().library(): ', _proxies().proxy().libraries().library());  // Library {}
-// console.log('server - _proxies().proxy().libraries().library().uri: ', _proxies().proxy().libraries().library().uri); // function () { return new LibraryUri(); }
-// console.log('server - _proxies().proxy().libraries().library().uri(): ', _proxies().proxy().libraries().library().uri());
-
+  // console.log('server - library: ', _proxies().proxy().libraries().library); // function () { return new LibrariesLibrary(); }
+  // console.log('server - _proxies().proxy().libraries().library(): ', _proxies().proxy().libraries().library());  // Library {}
+  // console.log('server - _proxies().proxy().libraries().library().uri: ', _proxies().proxy().libraries().library().uri); // function () { return new LibraryUri(); }
+  // console.log('server - _proxies().proxy().libraries().library().uri(): ', _proxies().proxy().libraries().library().uri());
   var URI = _proxies().proxy().libraries().library().uri;
   console.log('server - URI: ', URI);
-//  var uri = new URI("urn:uuid:c5542ab6-3d96-403e-8e6b-b8bb52f48d9a");
   var uri = new URI(resourceForUuid.URI);
   console.log('server - uri: ', uri);
   console.log('server - uri.value: ', uri.value);
-
   var uriParts = uri.value.split(':');
   console.log('server - uriParts: ', uriParts);
-
   // Look for the occurence of 'uuid' in the array of uriParts
   var uriUuidKeyIndex = uriParts.indexOf('uuid'); // returns the index if the found Object
   console.log('server - uriUuidKeyIndex: ', uriUuidKeyIndex);
-
   if (uriUuidKeyIndex >= 0) {
     var uuid = uriParts[uriUuidKeyIndex+1]; 
     console.log('server - uuid: ', uuid);
-
     // Get a configuration, by comparing with the uuid
     //console.log('server - configuration: ', _proxies().proxy().configurations().configuration); // function () { return new ConfigurationsConfiguration(); }
     //console.log('server - _proxies().proxy()..configurations().configuration(): ', _proxies().proxy().configurations().configuration());  // Configuration {}
@@ -153,12 +145,12 @@ join(_proxies(), function(proxies) {
     console.log('server - configuration: ', configuration);
     for (var key in configuration) {
       console.log('server - key: ', key);
-      // strip prefix _ if present on key, then substitute all _ for - if present on key
+      // Strip prefix _ if present on key, then substitute all _ for - if present on key
       var keyUuid = key.replace(/^\_/, "").replace(/_/g, "\-");
       console.log('server - keyUuid: ', keyUuid);
       if(uuid == keyUuid) {
         console.log('server - uuid == keyUuid');
-        // do something
+        // Do something
         configurationForUuid = configuration[key]();
         break;
       }
@@ -170,13 +162,13 @@ join(_proxies(), function(proxies) {
   }
   // Validate configurationForUuid
   if(Object.keys(configurationForUuid).length == 0) {
-    // raise an error, the resourceForUuid has not been found
+    // Raise an error, the resourceForUuid has not been found
     throw new Error("No configuration found for uuid: ", uuid); // TO FIX: for some reason the value of uuid is empty here
   } 
   else {
     return configurationForUuid;
   };
-}) //eof then resourceForUuid
+}) // eof then resourceForUuid
 .then(function(configurationForUuid) {
   // Check which properties are contained within configurationForUuid
   var common = configurationForUuid.common();
@@ -192,10 +184,15 @@ join(_proxies(), function(proxies) {
   var serversServer = configurationForUuid.servers().server();
   console.log('server - servers().server(): ', serversServer);
 
-  var serversServerExpress = configurationForUuid.servers().server().express(); // express is not a function
+  var serversServerExpress = configurationForUuid.servers().server().express();
   console.log('server - servers().server().express(): ', serversServerExpress);
 
+  var serversServerExpressHost = configurationForUuid.servers().server().express().host();
+  console.log('server - servers().server().express().host(): ', serversServerExpressHost); // undefined ?! FIX THIS !!
 
+  // Get the express library
+  var express = _proxies().proxy().libraries().library().express();
+  console.log('server - express: ', express);
 
 
 //				            .then(function(_Me) {
