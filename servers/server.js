@@ -159,7 +159,7 @@ join(_proxies(), function(proxies) {
       if(uuid == keyUuid) {
         console.log('server - uuid == keyUuid');
         // do something
-        configurationForUuid = configuration[key]();
+        configurationForUuid = configuration[key]()(); // note: twice called
         break;
       }
     } // eof for
@@ -169,10 +169,9 @@ join(_proxies(), function(proxies) {
   	// no uuid in resourceForUuid.URI
   }
 
+  // WHY ARE THERE NO KEYS IN configurationForUuid ??
+  // CHECK THIS AND FIX IT ...
 
-  // SO FAR SO GOOD, NOW CHECK WHICH keys ARE WITHIN configurationForUuid
-
-  // to do ...
 
 
   // Validate configurationForUuid
