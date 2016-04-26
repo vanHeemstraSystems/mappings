@@ -192,7 +192,7 @@ join(_proxies(), function(proxies) {
   var serversExpress = configurationForUuid.servers().express();
   console.log('server - servers().express(): ', serversExpress);
 
-  var serversExpressHost = serversExpress.host(); //
+  var serversExpressHost = serversExpress.host(); // host is not a function... fix this!
   console.log('server - serversExpress.host(): ', serversExpressHost);
 
 //  var serversExpressHost = configurationForUuid.servers().express().host(); // host is not a function... fix this!
