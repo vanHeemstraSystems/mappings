@@ -159,7 +159,7 @@ join(_proxies(), function(proxies) {
       if(uuid == keyUuid) {
         console.log('server - uuid == keyUuid');
         // do something
-        configurationForUuid = configuration[key]()(); // note: twice called
+        configurationForUuid = configuration[key]();
         break;
       }
     } // eof for
