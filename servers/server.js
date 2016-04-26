@@ -168,12 +168,6 @@ join(_proxies(), function(proxies) {
   else {
   	// no uuid in resourceForUuid.URI
   }
-
-  // WHY ARE THERE NO KEYS IN configurationForUuid ??
-  // CHECK THIS AND FIX IT ...
-
-
-
   // Validate configurationForUuid
   if(Object.keys(configurationForUuid).length == 0) {
     // raise an error, the resourceForUuid has not been found
@@ -184,26 +178,19 @@ join(_proxies(), function(proxies) {
   };
 }) //eof then resourceForUuid
 .then(function(configurationForUuid) {
+  // Check which properties are contained within configurationForUuid
+  var common = configurationForUuid.common();
+  console.log('server - configurationForUuid.common(): ', common);
 
+  // Data protection
+  // var private_host = configurationForUuid.common()._host; // This fails, var _host is private therefore hidden from direct access
+  // console.log('server - private_host: ', private_host);
+  //
+  // var public_host = configurationForUuid.common().host(); // This succeeds, the method host() is public, with access to the private var _host
+  // console.log('server - public_host: ', public_host);
 
-
-
-//				            .then(function(_Me) {
-//					          return(
-//					            join(_Me.proxies.configurations(_Me.proxies.resources.resource), function(configurations) {
-//					              //configurations.common.server_prefix = configurations.common.server_prefix || 'PREFIX';
-//						          //console.log(server_prefix + ' - configurations: ', configurations);
-//								  console.log('server - configurations: ', configurations);
-//							      _Me.proxies.configurations.configurations = configurations;
-//				                  return(_Me);
-//					            }) // eof join
-//					            .catch(function(error) {
-//				                  console.log('server - error: ', error);
-//				                }) // eof catch
-//				              ); // eof return
-//				            }) //eof then configurations
-
-
+  var server_prefix = configurationForUuid.common().server_prefix() || 'PREFIX';
+  console.log('server - server_prefix: ', server_prefix);
 
 				/*            
 							  var configurations = require(path.join(paths.configurations, '/configurations.js')); // A function that returns a Promise
