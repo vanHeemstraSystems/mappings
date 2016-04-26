@@ -210,10 +210,10 @@ join(_proxies(), function(proxies) {
   console.log('server - servers().server().express().host(): ', serversServerExpressHost); // undefined ?! FIX THIS !!
 
   // Get the express library
-  var express = _proxies().proxy().libraries().library().express();
+  var express = _proxies().proxy().libraries().library().express; // note: don't call express yet
   console.log('server - express: ', express);
   // Assign express to the server
-  var server = express(); // [TypeError: Cannot read property 'statusCode' of undefined]  FIX THIS !!
+  var server = express(); // Works!
   console.log('server - server: ', server);
 
 
