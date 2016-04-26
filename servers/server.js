@@ -181,24 +181,25 @@ join(_proxies(), function(proxies) {
   // Check which properties are contained within configurationForUuid
   var common = configurationForUuid.common();
   console.log('server - configurationForUuid.common(): ', common);
-
   // Data protection
   // var private_host = configurationForUuid.common()._host; // This fails, var _host is private therefore hidden from direct access
   // console.log('server - private_host: ', private_host);
-  //
   // var public_host = configurationForUuid.common().host(); // This succeeds, the method host() is public, with access to the private var _host
   // console.log('server - public_host: ', public_host);
-
   var server_prefix = configurationForUuid.common().server_prefix() || 'PREFIX';
   console.log('server - server_prefix: ', server_prefix);
 
-				/*            
-							  var configurations = require(path.join(paths.configurations, '/configurations.js')); // A function that returns a Promise
-							  configurations(resource)
-							  .then(function(configurations) {  
-				                var server_prefix = configurations.common.server_prefix || 'PREFIX';
-								console.log(server_prefix + ' - configurations: ', configurations);
-				*/
+  var serversExpress = configurationForUuid.servers().express();
+  console.log('server - servers().express(): ', serversExpress);
+
+  var serversExpressHost = serversExpress.host(); //
+  console.log('server - serversExpress.host(): ', serversExpressHost);
+
+//  var serversExpressHost = configurationForUuid.servers().express().host(); // host is not a function... fix this!
+//  console.log('server - servers().express().host(): ', serversExpressHost);
+
+
+
 //				            .then(function(_Me) {
 //				              return(
 //				              	join(_Me.proxies.libraries.express(), function(server) {
