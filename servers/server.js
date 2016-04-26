@@ -130,46 +130,62 @@ join(_proxies(), function(proxies) {
   console.log('server - URI: ', URI);
 //  var uri = new URI("urn:uuid:c5542ab6-3d96-403e-8e6b-b8bb52f48d9a");
   var uri = new URI(resourceForUuid.URI);
-
   console.log('server - uri: ', uri);
+  console.log('server - uri.value: ', uri.value);
 
-  var uuid = resourceForUuid.URI; // TO DO: extract the uuid value from the URI string !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  var uriParts = uri.value.split(':');
+  console.log('server - uriParts: ', uriParts);
 
+  // Look for the occurence of 'uuid' in the array of uriParts
+  var uriUuidKeyIndex = uriParts.indexOf('uuid'); // returns the index if the found Object
+  console.log('server - uriUuidKeyIndex: ', uriUuidKeyIndex);
 
+  if (uriUuidKeyIndex >= 0) {
+    var uuid = uriParts[uriUuidKeyIndex+1]; 
+    console.log('server - uuid: ', uuid);
 
-
-  console.log('server - uuid: ', uuid);
-  // Get a configuration, by comparing with the uuid
-//console.log('server - configuration: ', _proxies().proxy().configurations().configuration); // function () { return new ConfigurationsConfiguration(); }
-//console.log('server - _proxies().proxy()..configurations().configuration(): ', _proxies().proxy().configurations().configuration());  // Configuration {}
-//console.log('server - _proxies().proxy().configurations().configuration()._6e8bc430_9c3a_11d9_9669_0800200c9a66: ', _proxies().proxy().configurations().configuration()._6e8bc430_9c3a_11d9_9669_0800200c9a66);
-//console.log('server - _proxies().proxy().configurations().configuration()._6e8bc430_9c3a_11d9_9669_0800200c9a66(): ', _proxies().proxy().configurations().configuration()._6e8bc430_9c3a_11d9_9669_0800200c9a66());
-  var configuration = _proxies().proxy().configurations().configuration();
-  console.log('server - configuration: ', configuration);
-  for (var key in configuration) {
-	console.log('server - key: ', key);
-	// strip prefix _ if present on key, then substitute all _ for - if present on key
-    var keyUuid = key.replace(/^\_/, "").replace(/_/g, "\-");
-    console.log('server - keyUuid: ', keyUuid);
-    if(uuid == keyUuid) {
-      console.log('server - uuid == keyUuid');
-      // do something
-      configurationForUuid = resource[key]();
-      break;
-    }
+    // Get a configuration, by comparing with the uuid
+    //console.log('server - configuration: ', _proxies().proxy().configurations().configuration); // function () { return new ConfigurationsConfiguration(); }
+    //console.log('server - _proxies().proxy()..configurations().configuration(): ', _proxies().proxy().configurations().configuration());  // Configuration {}
+    //console.log('server - _proxies().proxy().configurations().configuration()._6e8bc430_9c3a_11d9_9669_0800200c9a66: ', _proxies().proxy().configurations().configuration()._6e8bc430_9c3a_11d9_9669_0800200c9a66);
+    //console.log('server - _proxies().proxy().configurations().configuration()._6e8bc430_9c3a_11d9_9669_0800200c9a66(): ', _proxies().proxy().configurations().configuration()._6e8bc430_9c3a_11d9_9669_0800200c9a66());
+    var configuration = _proxies().proxy().configurations().configuration();
+    console.log('server - configuration: ', configuration);
+    for (var key in configuration) {
+      console.log('server - key: ', key);
+      // strip prefix _ if present on key, then substitute all _ for - if present on key
+      var keyUuid = key.replace(/^\_/, "").replace(/_/g, "\-");
+      console.log('server - keyUuid: ', keyUuid);
+      if(uuid == keyUuid) {
+        console.log('server - uuid == keyUuid');
+        // do something
+        configurationForUuid = configuration[key]();
+        break;
+      }
+    } // eof for
+    console.log('server - configurationForUuid: ', configurationForUuid);
+  } // eof if
+  else {
+  	// no uuid in resourceForUuid.URI
   }
-  console.log('server - configurationForUuid: ', configurationForUuid);
+
+
+  // SO FAR SO GOOD, NOW CHECK WHICH keys ARE WITHIN configurationForUuid
+
+  // to do ...
+
 
   // Validate configurationForUuid
   if(Object.keys(configurationForUuid).length == 0) {
-  	// raise an error, the resourceForUuid has not been found
-  	throw new Error("No configuration found for uuid: ", uuid); // TO FIX: for some reason the value of uuid is empty here
+    // raise an error, the resourceForUuid has not been found
+    throw new Error("No configuration found for uuid: ", uuid); // TO FIX: for some reason the value of uuid is empty here
   } 
   else {
-  	return configurationForUuid;
+    return configurationForUuid;
   };
 }) //eof then resourceForUuid
 .then(function(configurationForUuid) {
+
 
 
 
