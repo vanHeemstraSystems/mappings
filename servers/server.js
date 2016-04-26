@@ -216,6 +216,13 @@ join(_proxies(), function(proxies) {
   var server = express(); // Works!
   console.log('server - server: ', server);
 
+  var mappings = _proxies().proxy().mappings(); // Works!
+  console.log('server - mappings: ', mappings);
+
+  var mapping = _proxies().proxy().mappings().mapping();
+  console.log('server - mapping: ', mapping);
+
+
 
 //				            .then(function(_Me) {
 //				              return(

@@ -17,4 +17,4 @@ Mapping.prototype.rethinkDB = function() {
   return new MappingRethinkDB();
 }
 
-module.exports = new Mapping();
+module.exports = Mapping;

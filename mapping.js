@@ -1,5 +1,8 @@
+/*
+ * mapping.js
+ */
 //import Mapping from 'mapping';
 //
 //export default Mapping;
 
-module.mapping = require(__dirname+'/mapping/index.js');
+module.exports = require(__dirname+'/mapping/index.js');

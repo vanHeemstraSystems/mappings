@@ -10,12 +10,11 @@ var MappingsMapping = require(__dirname+'/mapping.js');
 function Mappings() { }
 
 /**
- * Create a new ProxiesProxy object.
- * @return {ProxiesProxy}
+ * Create a new MappingsMapping object.
+ * @return {MappingsMapping}
  */
 Mappings.prototype.mapping = function() {
   return new MappingsMapping();
 }
 
-//ORIGINAL module.exports = new Mappings();
-module.exports = function() { return new Mappings(); }
+module.exports = Mappings;
