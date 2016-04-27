@@ -57,14 +57,22 @@ function RethinkDB(config) {
 
   console.log('mapping rethinkdb - config.rethinkdbdash: ', config.rethinkdbdash);
 
-    //   if (config.r === undefined) {
+  if (config.rethinkdbdash === undefined) {
+    // Raise an error, the config property rethinkdbdash is undefined
+    throw new Error("mapping rethinkdb - rethinkdbdash undefined for config: ", config);
     //     self.r = rethinkdbdash(config); // DOES IT WORK??
     //     //self.r = require(path.join(paths.libraries, '/rethinkdbdash.js'))(config); // WORKS!!!
-    //   }
-    //   else {
-    //     self.r = config.r;
-    //   }
-    //   console.log('Mapping rethinkdb - self.r: ', self.r);
+  }
+  else {
+    // Assemble the config properties required by rethinkdbdash
+    var configDash = {}
+    configDash.host = config.host();
+    configDash.port = config.port();
+    configDash.authKey = config.authKey();
+    configDash.db = config.db();
+    self.r = config.rethinkdbdash(configDash);
+  }
+  console.log('Mapping rethinkdb - self.r: ', self.r);
 
     //   self.type = type;
     //   console.log('Mapping rethinkdb - self.type: ', self.type);
