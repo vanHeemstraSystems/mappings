@@ -15,40 +15,47 @@
 *  - `enforce_type` {"strict"|"loose"|"none"}, default `"loose"`
 *  - `timeFormat` {"raw"|"native"}
 */
-
-function RethinkDB() { }
-
-
-    // function RethinkDB(config) {
-    //   console.log('mapping rethinkdb - RethinkDB called');
-    //   console.log('mapping rethinkdb - config ', config);
+function RethinkDB(config) {
+  console.log('mapping rethinkdb - RethinkDB called');
+  console.log('mapping rethinkdb - config ', config);
      
-    //   var self = this;
+  var self = this;
 
-    //   config = config || {};
-    //   config.db = config.db || 'test'; // We need the default db to create it.
-    //   self._config = config;
+  config = config || {};
 
-    //   console.log('Mapping rethinkdb - self._config: ', self._config);
+  //ORIGINAL config.db = config.db || 'test'; // We need the default db to create it.
+  //console.log('rethinkdb - config: ', config);
+  //console.log('rethinkdb - config.db: ', config.db);  
+  console.log('mapping rethinkdb - config.db(): ', config.db());  
+  //console.log('rethinkdb - config._db: ', config._db);
 
-    //   self._options = {};
-    //   // Option passed to each model we are going to create.
-    //   self._options.enforce_missing =
-    //     (config.enforce_missing != null) ? config.enforce_missing : false;
-    //   self._options.enforce_extra =
-    //     (config.enforce_extra != null) ? config.enforce_extra : "none";
-    //   self._options.enforce_type =
-    //     (config.enforce_type != null) ? config.enforce_type : 'loose';
+  // In order to get the value of db, call it on the config Object, like so:
+  var db = config.db(); // As an example
+  console.log('mapping rethinkdb - db: ', db);
+  console.log('mapping rethinkdb - config.options: ', config.options);
 
-    //   // Format of time objects returned by the database, by default we convert
-    //   // them to JavaScript Dates.
-    //   self._options.timeFormat =
-    //     (config.timeFormat != null) ? config.timeFormat : 'native';
-    //   // Option passed to each model we are going to create.
-    //   self._options.validate =
-    //     (config.validate != null) ? config.validate : 'onsave';
+  self._config = config;
 
-    //   console.log('Mapping rethinkdb - config.r: ', config.r);
+  console.log('mapping rethinkdb - self._config: ', self._config);
+
+  self._options = {};
+  // Option passed to each model we are going to create.
+  self._options.enforce_missing =
+    (config.enforce_missing != null) ? config.enforce_missing : false;
+  self._options.enforce_extra =
+    (config.enforce_extra != null) ? config.enforce_extra : "none";
+  self._options.enforce_type =
+    (config.enforce_type != null) ? config.enforce_type : 'loose';
+
+  // Format of time objects returned by the database, by default we convert
+  // them to JavaScript Dates.
+  self._options.timeFormat =
+    (config.timeFormat != null) ? config.timeFormat : 'native';
+  // Option passed to each model we are going to create.
+  self._options.validate =
+    (config.validate != null) ? config.validate : 'onsave';
+
+  console.log('mapping rethinkdb - config.r: ', config.r);
 
     //   if (config.r === undefined) {
     //     self.r = rethinkdbdash(config); // DOES IT WORK??
@@ -77,7 +84,7 @@ function RethinkDB() { }
     //     throw error;
     //   });
 
-    // }; // eof function RethinkDB(config)
+}; // eof function RethinkDB(config)
 
     // /**
     // * Initialize our database.

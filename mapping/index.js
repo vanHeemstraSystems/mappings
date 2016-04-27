@@ -13,8 +13,8 @@ function Mapping() { }
  * Create a new MappingRethinkDB object.
  * @return {MappingRethinkDB}
  */
-Mapping.prototype.rethinkDB = function() {
-  return new MappingRethinkDB();
+Mapping.prototype.rethinkdb = function(config) {
+  return new MappingRethinkDB(config);
 }
 
 module.exports = Mapping;

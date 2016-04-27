@@ -219,8 +219,23 @@ join(_proxies(), function(proxies) {
   var mappings = _proxies().proxy().mappings(); // Works!
   console.log('server - mappings: ', mappings);
 
-  var mapping = _proxies().proxy().mappings().mapping();
+  var mapping = _proxies().proxy().mappings().mapping(); // Works!
   console.log('server - mapping: ', mapping);
+
+  var rethinkdbMapping = _proxies().proxy().mappings().mapping().rethinkdb; // note: don't call rethinkdb yet
+  console.log('server - rethinkdbMapping: ', rethinkdbMapping);
+
+  var config = configurationForUuid.databases().database().rethinkdb();
+  console.log('server - config: ', config);
+
+  var rethinkdbMapping = rethinkdbMapping(config);
+
+
+
+
+//  var rethinkdb = rethinkdbMapping.r;
+//  console.log('server - rethinkdb: ', rethinkdb);
+
 
 
 
