@@ -234,6 +234,10 @@ join(_proxies(), function(proxies) {
   config.setrethinkdbdash(rethinkDBDash); // Set rethinkDBDash to config
   console.log('server - config.rethinkdbdash(): ', config.rethinkdbdash()); // Expected set to RethinkDBDash
 
+  // Make sure RethinkDB is running before executing the following instruction
+  // On Windows, run rethinkdb.exe
+  // On Linux, tbc
+  // On Mac, tbc
   var rethinkdbMapping = rethinkdbMapping(config);
 
 
