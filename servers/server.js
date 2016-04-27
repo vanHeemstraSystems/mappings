@@ -228,6 +228,12 @@ join(_proxies(), function(proxies) {
   var config = configurationForUuid.databases().database().rethinkdb();
   console.log('server - config: ', config);
 
+  console.log('server - config.rethinkdbdash(): ', config.rethinkdbdash()); // Expected empty
+  var rethinkDBDash = _proxies().proxy().libraries().library().rethinkdbdash();
+  console.log('server - rethinkDBDash: ', rethinkDBDash);
+  config.setrethinkdbdash(rethinkDBDash); // Set rethinkDBDash to config
+  console.log('server - config.rethinkdbdash(): ', config.rethinkdbdash()); // Expected set to RethinkDBDash
+
   var rethinkdbMapping = rethinkdbMapping(config);
 
 

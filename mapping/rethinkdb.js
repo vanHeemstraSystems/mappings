@@ -55,7 +55,7 @@ function RethinkDB(config) {
   self._options.validate =
     (config.validate != null) ? config.validate : 'onsave';
 
-  console.log('mapping rethinkdb - config.r: ', config.r);
+  console.log('mapping rethinkdb - config.rethinkdbdash: ', config.rethinkdbdash);
 
     //   if (config.r === undefined) {
     //     self.r = rethinkdbdash(config); // DOES IT WORK??
