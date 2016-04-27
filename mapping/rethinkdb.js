@@ -72,26 +72,32 @@ function RethinkDB(config) {
     configDash.db = config.db();
     self.r = config.rethinkdbdash(configDash);
   }
-  console.log('Mapping rethinkdb - self.r: ', self.r);
+  console.log('mapping rethinkdb - self.r: ', self.r);
 
-    //   self.type = type;
-    //   console.log('Mapping rethinkdb - self.type: ', self.type);
+  if(config.type === undefined) {
+    // Raise an error, the config property type is undefined
+    throw new Error("mapping rethinkdb - type undefined for config: ", config);
+  }
+  else {
+    // Get type from config
+    self.type = config.type();
+    console.log('mapping rethinkdb - self.type: ', self.type);
+  }
 
-    //   self.Query = Query;
-    //   console.log('Mapping rethinkdb - self.Query: ', self.Query);
+  self.Query = Query;
+  console.log('mapping rethinkdb - self.Query: ', self.Query);
 
-    //   self.models = {};
-    //   console.log('Mapping rethinkdb - self.models: ', self.models);
+  self.models = {};
+  console.log('mapping rethinkdb - self.models: ', self.models);
 
-    //   // Export errors
-    //   self.Errors = Errors;
-    //   console.log('Mapping rethinkdb - self.Errors: ', self.Errors);
+  // Export errors
+  self.Errors = Errors;
+  console.log('mapping rethinkdb - self.Errors: ', self.Errors);
 
-    //   // Initialize the database.
-    //   self.dbReady().then().error(function(error) {
-    //     throw error;
-    //   });
-
+  // Initialize the database.
+  self.dbReady().then().error(function(error) {
+    throw error;
+  });
 }; // eof function RethinkDB(config)
 
     // /**

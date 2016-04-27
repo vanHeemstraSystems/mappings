@@ -228,11 +228,16 @@ join(_proxies(), function(proxies) {
   var config = configurationForUuid.databases().database().rethinkdb();
   console.log('server - config: ', config);
 
-  console.log('server - config.rethinkdbdash(): ', config.rethinkdbdash()); // Expected empty
+  console.log('server - config.rethinkdbdash(): ', config.rethinkdbdash()); // Expected empty Object
   var rethinkDBDash = _proxies().proxy().libraries().library().rethinkdbdash();
   console.log('server - rethinkDBDash: ', rethinkDBDash);
   config.setrethinkdbdash(rethinkDBDash); // Set rethinkDBDash to config
   console.log('server - config.rethinkdbdash(): ', config.rethinkdbdash()); // Expected set to RethinkDBDash
+
+  console.log('server - config.type(): ', config.type()); // Expected empty Object
+  var type = _proxies().proxy().types().type(); //---------------------------------------> FIX THIS !! Type is not a function
+  config.settype(type); // Set type to config
+  console.log('server - config.type(): ', config.type()); // Expected set to Type
 
   // Make sure RethinkDB is running before executing the following instruction
   // On Windows, run rethinkdb.exe
