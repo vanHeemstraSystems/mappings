@@ -235,9 +235,42 @@ join(_proxies(), function(proxies) {
   console.log('server - config.rethinkdbdash(): ', config.rethinkdbdash()); // Expected set to RethinkDBDash
 
   console.log('server - config.type(): ', config.type()); // Expected empty Object
-  var type = _proxies().proxy().types().type(); //---------------------------------------> FIX THIS !! Type is not a function
+
+  console.log('server - _proxies().proxy().types: ', _proxies().proxy().types); // FOR TESTING ONLY
+  console.log('server - _proxies().proxy().types(): ', _proxies().proxy().types()); // FOR TESTING ONLY
+  console.log('server - _proxies().proxy().types().type: ', _proxies().proxy().types().type); // FOR TESTING ONLY
+  console.log('server - _proxies().proxy().types().type(): ', _proxies().proxy().types().type()); // FOR TESTING ONLY  
+
+  var type = _proxies().proxy().types().type(); // WORKS
+  type.seterror(_proxies().proxy().errors().error());  // Does this cause [Error: Cannot find module '../libraries/path'] code: 'MODULE_NOT_FOUND'
+  type.setutility(_proxies().proxy().utilities().utility());  // Does this cause [Error: Cannot find module '../libraries/path'] code: 'MODULE_NOT_FOUND'
+  type.setschema(_proxies().proxy().schemas().schema());  // Does this cause [Error: Cannot find module '../libraries/path'] code: 'MODULE_NOT_FOUND'
+  type.setvalidator(_proxies().proxy().libraries().library().validator());  // Does this cause [Error: Cannot find module '../libraries/path'] code: 'MODULE_NOT_FOUND'
+
+// WE ARE HERE ! with [Error: Cannot find module '../libraries/path'] code: 'MODULE_NOT_FOUND'
+
   config.settype(type); // Set type to config
   console.log('server - config.type(): ', config.type()); // Expected set to Type
+
+  console.log('server - config.schema(): ', config.schema()); // Expected empty Object
+  var schema = _proxies().proxy().schemas().schema(); //---------------------------------------> FIX THIS !! Schema is not a function
+  config.setschema(schema); // Set schema to config
+  console.log('server - config.schema(): ', config.schema()); // Expected set to Schema
+
+  console.log('server - config.utility(): ', config.utility()); // Expected empty Object
+  var utility = _proxies().proxy().utilities().utility(); //---------------------------------------> FIX THIS !! Utility is not a function
+  config.setutility(utility); // Set utility to config
+  console.log('server - config.utility(): ', config.utility()); // Expected set to Utility
+
+  console.log('server - config.error(): ', config.error()); // Expected empty Object
+  var error = _proxies().proxy().errors().error(); //---------------------------------------> FIX THIS !! Error is not a function
+  config.seterror(error); // Set error to config
+  console.log('server - config.error(): ', config.error()); // Expected set to Error
+
+  console.log('server - config.query(): ', config.query()); // Expected empty Object
+  var query = _proxies().proxy().queries().query(); //---------------------------------------> FIX THIS !! Query is not a function
+  config.setquery(query); // Set query to config
+  console.log('server - config.query(): ', config.query()); // Expected set to Query
 
   // Make sure RethinkDB is running before executing the following instruction
   // On Windows, run rethinkdb.exe
