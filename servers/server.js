@@ -245,13 +245,15 @@ join(_proxies(), function(proxies) {
   console.log('server - config.error(): ', config.error()); // Expected set to Error
 
   console.log('server - config.utility(): ', config.utility()); // Expected empty Object
-  var utility = _proxies().proxy().utilities().utility(); //---------------------------------------> FIX THIS !! UtilitiesUtility is not a function
-
-// WE ARE HERE ! 
-
+  var utility = _proxies().proxy().utilities().utility();
   utility.setpromise(_proxies().proxy().libraries().library().promise); // Don't call the promise yet, or should we?
   utility.setevent(_proxies().proxy().events().event);
-  utility.inherits(error); // Utility needs to inherit all the error objects
+
+// WE ARE HERE ! 
+  console.log('server - utility: ', utility); // FOR TEST ONLY
+  
+
+  utility.inherits(error); // Utility needs to inherit all the error objects // Currently [TypeError: utility.inherits is not a function]
   config.setutility(utility); // Set utility to config
   console.log('server - config.utility(): ', config.utility()); // Expected set to Utility
 
