@@ -242,7 +242,7 @@ join(_proxies(), function(proxies) {
   console.log('server - config.utility(): ', config.utility()); // Expected empty Object
   var utility = _proxies().proxy().utilities().utility(); //---------------------------------------> FIX THIS !! UtilitiesUtility is not a function
 
-// WE ARE HERE ! with [Error: Cannot find module '../libraries/path'] code: 'MODULE_NOT_FOUND'
+// WE ARE HERE ! 
 
   utility.setpromise(_proxies().proxy().libraries().library().promise); // Don't call the promise yet, or should we?
   utility.inherits(error); // Utility needs to inherit all the error objects
