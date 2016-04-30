@@ -235,15 +235,17 @@ join(_proxies(), function(proxies) {
   console.log('server - config.rethinkdbdash(): ', config.rethinkdbdash()); // Expected set to RethinkDBDash
 
   console.log('server - config.error(): ', config.error()); // Expected empty Object
-  var error = _proxies().proxy().errors().error(); //---------------------------------------> FIX THIS !! Error is not a function
+  var error = _proxies().proxy().errors().error();
   config.seterror(error); // Set error to config
   console.log('server - config.error(): ', config.error()); // Expected set to Error
 
   console.log('server - config.utility(): ', config.utility()); // Expected empty Object
-  var utility = _proxies().proxy().utilities().utility(); //---------------------------------------> FIX THIS !! Utility is not a function
+  var utility = _proxies().proxy().utilities().utility(); //---------------------------------------> FIX THIS !! UtilitiesUtility is not a function
+
+// WE ARE HERE ! with [Error: Cannot find module '../libraries/path'] code: 'MODULE_NOT_FOUND'
+
   utility.setpromise(_proxies().proxy().libraries().library().promise); // Don't call the promise yet, or should we?
-  // Here utility needs to inherit all the error objects
-  utility.inherits(error);
+  utility.inherits(error); // Utility needs to inherit all the error objects
   config.setutility(utility); // Set utility to config
   console.log('server - config.utility(): ', config.utility()); // Expected set to Utility
 
@@ -259,8 +261,6 @@ join(_proxies(), function(proxies) {
   type.setutility(utility);  // Does this cause [Error: Cannot find module '../libraries/path'] code: 'MODULE_NOT_FOUND'
   type.setschema(_proxies().proxy().schemas().schema());  // Does this cause [Error: Cannot find module '../libraries/path'] code: 'MODULE_NOT_FOUND'
   type.setvalidator(_proxies().proxy().libraries().library().validator());  // Does this cause [Error: Cannot find module '../libraries/path'] code: 'MODULE_NOT_FOUND'
-
-// WE ARE HERE ! with [Error: Cannot find module '../libraries/path'] code: 'MODULE_NOT_FOUND'
 
   config.settype(type); // Set type to config
   console.log('server - config.type(): ', config.type()); // Expected set to Type
