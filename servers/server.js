@@ -234,6 +234,11 @@ join(_proxies(), function(proxies) {
   config.setrethinkdbdash(rethinkDBDash); // Set rethinkDBDash to config
   console.log('server - config.rethinkdbdash(): ', config.rethinkdbdash()); // Expected set to RethinkDBDash
 
+  console.log('server - config.event(): ', config.event()); // Expected empty Object
+  var event = _proxies().proxy().events().event();
+  config.setevent(event); // Set event to config
+  console.log('server - config.event(): ', config.event()); // Expected set to Event
+
   console.log('server - config.error(): ', config.error()); // Expected empty Object
   var error = _proxies().proxy().errors().error();
   config.seterror(error); // Set error to config
@@ -245,6 +250,7 @@ join(_proxies(), function(proxies) {
 // WE ARE HERE ! 
 
   utility.setpromise(_proxies().proxy().libraries().library().promise); // Don't call the promise yet, or should we?
+  utility.setevent(_proxies().proxy().events().event);
   utility.inherits(error); // Utility needs to inherit all the error objects
   config.setutility(utility); // Set utility to config
   console.log('server - config.utility(): ', config.utility()); // Expected set to Utility
