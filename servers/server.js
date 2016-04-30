@@ -228,11 +228,19 @@ join(_proxies(), function(proxies) {
   var config = configurationForUuid.databases().database().rethinkdb();
   console.log('server - config: ', config);
 
-  console.log('server - config.rethinkdbdash(): ', config.rethinkdbdash()); // Expected empty Object
-  var rethinkDBDash = _proxies().proxy().libraries().library().rethinkdbdash();
-  console.log('server - rethinkDBDash: ', rethinkDBDash);
-  config.setrethinkdbdash(rethinkDBDash); // Set rethinkDBDash to config
-  console.log('server - config.rethinkdbdash(): ', config.rethinkdbdash()); // Expected set to RethinkDBDash
+
+  // console.log('server - config.rethinkdbdash(): ', config.rethinkdbdash()); // Expected empty Object
+  // var rethinkDBDash = _proxies().proxy().libraries().library().rethinkdbdash();
+  // console.log('server - rethinkDBDash: ', rethinkDBDash);
+  // config.setrethinkdbdash(rethinkDBDash); // Set rethinkDBDash to config
+  // console.log('server - config.rethinkdbdash(): ', config.rethinkdbdash()); // Expected set to RethinkDBDash
+
+
+  console.log('server - config.rethinkdb(): ', config.rethinkdb()); // Expected empty Object
+  var rethinkDB = _proxies().proxy().databases().database().rethinkdb();
+  console.log('server - rethinkDB: ', rethinkDB);
+  config.setrethinkdb(rethinkDB); // Set rethinkDB to config
+  console.log('server - config.rethinkdb(): ', config.rethinkdb()); // Expected set to RethinkDB
 
   console.log('server - config.event(): ', config.event()); // Expected empty Object
   var event = _proxies().proxy().events().event();
