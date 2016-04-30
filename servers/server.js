@@ -234,6 +234,19 @@ join(_proxies(), function(proxies) {
   config.setrethinkdbdash(rethinkDBDash); // Set rethinkDBDash to config
   console.log('server - config.rethinkdbdash(): ', config.rethinkdbdash()); // Expected set to RethinkDBDash
 
+  console.log('server - config.error(): ', config.error()); // Expected empty Object
+  var error = _proxies().proxy().errors().error(); //---------------------------------------> FIX THIS !! Error is not a function
+  config.seterror(error); // Set error to config
+  console.log('server - config.error(): ', config.error()); // Expected set to Error
+
+  console.log('server - config.utility(): ', config.utility()); // Expected empty Object
+  var utility = _proxies().proxy().utilities().utility(); //---------------------------------------> FIX THIS !! Utility is not a function
+  utility.setpromise(_proxies().proxy().libraries().library().promise); // Don't call the promise yet, or should we?
+  // Here utility needs to inherit all the error objects
+  utility.inherits(error);
+  config.setutility(utility); // Set utility to config
+  console.log('server - config.utility(): ', config.utility()); // Expected set to Utility
+
   console.log('server - config.type(): ', config.type()); // Expected empty Object
 
   console.log('server - _proxies().proxy().types: ', _proxies().proxy().types); // FOR TESTING ONLY
@@ -243,7 +256,7 @@ join(_proxies(), function(proxies) {
 
   var type = _proxies().proxy().types().type(); // WORKS
   type.seterror(_proxies().proxy().errors().error());  // Does this cause [Error: Cannot find module '../libraries/path'] code: 'MODULE_NOT_FOUND'
-  type.setutility(_proxies().proxy().utilities().utility());  // Does this cause [Error: Cannot find module '../libraries/path'] code: 'MODULE_NOT_FOUND'
+  type.setutility(utility);  // Does this cause [Error: Cannot find module '../libraries/path'] code: 'MODULE_NOT_FOUND'
   type.setschema(_proxies().proxy().schemas().schema());  // Does this cause [Error: Cannot find module '../libraries/path'] code: 'MODULE_NOT_FOUND'
   type.setvalidator(_proxies().proxy().libraries().library().validator());  // Does this cause [Error: Cannot find module '../libraries/path'] code: 'MODULE_NOT_FOUND'
 
@@ -256,16 +269,6 @@ join(_proxies(), function(proxies) {
   var schema = _proxies().proxy().schemas().schema(); //---------------------------------------> FIX THIS !! Schema is not a function
   config.setschema(schema); // Set schema to config
   console.log('server - config.schema(): ', config.schema()); // Expected set to Schema
-
-  console.log('server - config.utility(): ', config.utility()); // Expected empty Object
-  var utility = _proxies().proxy().utilities().utility(); //---------------------------------------> FIX THIS !! Utility is not a function
-  config.setutility(utility); // Set utility to config
-  console.log('server - config.utility(): ', config.utility()); // Expected set to Utility
-
-  console.log('server - config.error(): ', config.error()); // Expected empty Object
-  var error = _proxies().proxy().errors().error(); //---------------------------------------> FIX THIS !! Error is not a function
-  config.seterror(error); // Set error to config
-  console.log('server - config.error(): ', config.error()); // Expected set to Error
 
   console.log('server - config.query(): ', config.query()); // Expected empty Object
   var query = _proxies().proxy().queries().query(); //---------------------------------------> FIX THIS !! Query is not a function
