@@ -261,7 +261,7 @@ join(_proxies(), function(proxies) {
 
 // WE ARE HERE ! 
 
-  type.setutility(utility);  // Does this cause [Error: Cannot find module '../libraries/path'] code: 'MODULE_NOT_FOUND'
+  type.setutility(utility);  // Causes [TypeError: type.setutility is not a function]
   type.setschema(_proxies().proxy().schemas().schema());  // Does this cause [Error: Cannot find module '../libraries/path'] code: 'MODULE_NOT_FOUND'
   type.setvalidator(_proxies().proxy().libraries().library().validator());  // Does this cause [Error: Cannot find module '../libraries/path'] code: 'MODULE_NOT_FOUND'
 
