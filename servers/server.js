@@ -257,31 +257,23 @@ join(_proxies(), function(proxies) {
   config.setutility(utility); // Set utility to config
   console.log('server - config.utility(): ', config.utility()); // Expected set to Utility
 
+  console.log('server - config.schema(): ', config.schema()); // Expected empty Object
+// WE ARE HERE ! 
+  var schema = _proxies().proxy().schemas().schema(); // Causes [TypeError: _proxies(...).proxy(...).schemas(...).schema is not a function]
+  schema.seterror(error);
+  schema.setutility(utility);
+  schema.settype(type);
+  config.setschema(schema); // Set schema to config
+  console.log('server - config.schema(): ', config.schema()); // Expected set to Schema
+
   console.log('server - config.type(): ', config.type()); // Expected empty Object 
   var type = _proxies().proxy().types().type();
   type.seterror(error);
   type.setutility(utility);
-
-// WE ARE HERE ! 
-  var schema = _proxies().proxy().schemas().schema();
-  schema.seterror(error);
-  schema.setutility(utility);
-  schema.settype(type);
   type.setschema(schema);
-
-console.log('server - CHECKPOINT 01');
-
-  type.setvalidator(_proxies().proxy().libraries().library().validator());  // Does this cause [Error: Cannot find module '../libraries/path'] code: 'MODULE_NOT_FOUND'
-
-console.log('server - CHECKPOINT 02');
-
+  type.setvalidator(_proxies().proxy().libraries().library().validator());
   config.settype(type); // Set type to config
   console.log('server - config.type(): ', config.type()); // Expected set to Type
-
-  console.log('server - config.schema(): ', config.schema()); // Expected empty Object
-  var schema = _proxies().proxy().schemas().schema(); //---------------------------------------> FIX THIS !! Schema is not a function
-  config.setschema(schema); // Set schema to config
-  console.log('server - config.schema(): ', config.schema()); // Expected set to Schema
 
   console.log('server - config.query(): ', config.query()); // Expected empty Object
   var query = _proxies().proxy().queries().query(); //---------------------------------------> FIX THIS !! Query is not a function
