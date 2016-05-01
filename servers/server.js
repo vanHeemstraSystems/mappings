@@ -249,23 +249,18 @@ join(_proxies(), function(proxies) {
   utility.setpromise(_proxies().proxy().libraries().library().promise); // Don't call the promise yet, or should we?
   utility.setevent(_proxies().proxy().events().event);
 
-// WE ARE HERE ! 
-  console.log('server - utility: ', utility); // FOR TEST ONLY
-  
+  // UNCOMMENT WHEN THIS ERROR IS FIXED!
+  //utility.inherits(error); // Utility needs to inherit all the error objects // Currently [TypeError: utility.inherits is not a function]
 
-  utility.inherits(error); // Utility needs to inherit all the error objects // Currently [TypeError: utility.inherits is not a function]
   config.setutility(utility); // Set utility to config
   console.log('server - config.utility(): ', config.utility()); // Expected set to Utility
 
-  console.log('server - config.type(): ', config.type()); // Expected empty Object
+  console.log('server - config.type(): ', config.type()); // Expected empty Object 
+  var type = _proxies().proxy().types().type();
+  type.seterror(_proxies().proxy().errors().error());
 
-  console.log('server - _proxies().proxy().types: ', _proxies().proxy().types); // FOR TESTING ONLY
-  console.log('server - _proxies().proxy().types(): ', _proxies().proxy().types()); // FOR TESTING ONLY
-  console.log('server - _proxies().proxy().types().type: ', _proxies().proxy().types().type); // FOR TESTING ONLY
-  console.log('server - _proxies().proxy().types().type(): ', _proxies().proxy().types().type()); // FOR TESTING ONLY  
+// WE ARE HERE ! 
 
-  var type = _proxies().proxy().types().type(); // WORKS
-  type.seterror(_proxies().proxy().errors().error());  // Does this cause [Error: Cannot find module '../libraries/path'] code: 'MODULE_NOT_FOUND'
   type.setutility(utility);  // Does this cause [Error: Cannot find module '../libraries/path'] code: 'MODULE_NOT_FOUND'
   type.setschema(_proxies().proxy().schemas().schema());  // Does this cause [Error: Cannot find module '../libraries/path'] code: 'MODULE_NOT_FOUND'
   type.setvalidator(_proxies().proxy().libraries().library().validator());  // Does this cause [Error: Cannot find module '../libraries/path'] code: 'MODULE_NOT_FOUND'
