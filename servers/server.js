@@ -244,10 +244,12 @@ join(_proxies(), function(proxies) {
   config.seterror(error); // Set error to config
   console.log('server - config.error(): ', config.error()); // Expected set to Error
 
+  var promise = _proxies().proxy().libraries().library().promise;
+ 
   console.log('server - config.utility(): ', config.utility()); // Expected empty Object
   var utility = _proxies().proxy().utilities().utility();
-  utility.setpromise(_proxies().proxy().libraries().library().promise); // Don't call the promise yet, or should we?
-  utility.setevent(_proxies().proxy().events().event);
+  utility.setpromise(promise); // Don't call the promise yet, or should we?
+  utility.setevent(event);
 
   // UNCOMMENT WHEN THIS ERROR IS FIXED!
   //utility.inherits(error); // Utility needs to inherit all the error objects // Currently [TypeError: utility.inherits is not a function]
@@ -257,13 +259,21 @@ join(_proxies(), function(proxies) {
 
   console.log('server - config.type(): ', config.type()); // Expected empty Object 
   var type = _proxies().proxy().types().type();
-  type.seterror(_proxies().proxy().errors().error());
+  type.seterror(error);
+  type.setutility(utility);
 
 // WE ARE HERE ! 
+  var schema = _proxies().proxy().schemas().schema();
+  schema.seterror(error);
+  schema.setutility(utility);
+  schema.settype(type);
+  type.setschema(schema);
 
-  type.setutility(utility);  // Causes [TypeError: type.setutility is not a function]
-  type.setschema(_proxies().proxy().schemas().schema());  // Does this cause [Error: Cannot find module '../libraries/path'] code: 'MODULE_NOT_FOUND'
+console.log('server - CHECKPOINT 01');
+
   type.setvalidator(_proxies().proxy().libraries().library().validator());  // Does this cause [Error: Cannot find module '../libraries/path'] code: 'MODULE_NOT_FOUND'
+
+console.log('server - CHECKPOINT 02');
 
   config.settype(type); // Set type to config
   console.log('server - config.type(): ', config.type()); // Expected set to Type
