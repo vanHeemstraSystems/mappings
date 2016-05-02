@@ -291,9 +291,8 @@ join(_proxies(), function(proxies) {
   console.log('server ------------- CHECK POINT  000 -------------'); // FOR TESTING ONLY !
 
 // WE ARE HERE ! 
-
   query.setrethinkdb(rethinkdb); // Do this as last set; // Causes [TypeError: self._rethinkdb is not a function]
-
+  
   console.log('server ------------- CHECK POINT  001 -------------'); // FOR TESTING ONLY !
 
   config.setquery(query); // Set query to config
