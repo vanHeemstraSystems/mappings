@@ -257,9 +257,8 @@ join(_proxies(), function(proxies) {
   config.setutility(utility); // Set utility to config
   console.log('server - config.utility(): ', config.utility()); // Expected set to Utility
 
-  console.log('server - config.schema(): ', config.schema()); // Expected empty Object
-// WE ARE HERE ! 
-  var schema = _proxies().proxy().schemas().schema(); // Causes [TypeError: _proxies(...).proxy(...).schemas(...).schema is not a function]
+  console.log('server - config.schema(): ', config.schema()); // Expected empty Object 
+  var schema = _proxies().proxy().schemas().schema();
   schema.seterror(error);
   schema.setutility(utility);
   schema.settype(type);
@@ -271,7 +270,10 @@ join(_proxies(), function(proxies) {
   type.seterror(error);
   type.setutility(utility);
   type.setschema(schema);
-  type.setvalidator(_proxies().proxy().libraries().library().validator());
+
+// WE ARE HERE !
+
+  type.setvalidator(_proxies().proxy().libraries().library().validator()); // Causes [TypeError: LibraryValidator is not a function]
   config.settype(type); // Set type to config
   console.log('server - config.type(): ', config.type()); // Expected set to Type
 
