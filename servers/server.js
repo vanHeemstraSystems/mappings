@@ -275,19 +275,28 @@ join(_proxies(), function(proxies) {
   config.settype(type); // Set type to config
   console.log('server - config.type(): ', config.type()); // Expected set to Type
 
-
   console.log('server - config.query(): ', config.query()); // Expected empty Object
-  var query = _proxies().proxy().queries().query();
 
-// WE ARE HERE ! // queries query index.js needs corrected for below set properities
+  console.log('server ------------- CHECK POINT  000 -------------'); // FOR TESTING ONLY !
+
+  var query = _proxies().proxy().queries().query(); // Causes  [TypeError: self.utility is not a function]
+
+// WE ARE HERE ! 
+
+  console.log('server ------------- CHECK POINT  001 -------------'); // FOR TESTING ONLY !
 
   query.setrethinkdb(rethinkdb);
   query.seterror(error);
   query.setschema(schema);
   query.setutility(utility);
+
+  console.log('server ------------- CHECK POINT  002 -------------'); // FOR TESTING ONLY !
+
   var feed = _proxies().proxy().feeds().feed();
   query.setfeed = (feed);
   query.setpromise = (promise);
+
+
   config.setquery(query); // Set query to config
   console.log('server - config.query(): ', config.query()); // Expected set to Query
 
