@@ -213,13 +213,13 @@ join(_proxies(), function(proxies) {
   var express = _proxies().proxy().libraries().library().express; // note: don't call express yet
   console.log('server - express: ', express);
   // Assign express to the server
-  var server = express(); // Works!
+  var server = express(); // note: now call express
   console.log('server - server: ', server);
 
-  var mappings = _proxies().proxy().mappings(); // Works!
+  var mappings = _proxies().proxy().mappings();
   console.log('server - mappings: ', mappings);
 
-  var mapping = _proxies().proxy().mappings().mapping(); // Works!
+  var mapping = _proxies().proxy().mappings().mapping();
   console.log('server - mapping: ', mapping);
 
   var rethinkdbMapping = _proxies().proxy().mappings().mapping().rethinkdb; // note: don't call rethinkdb yet
