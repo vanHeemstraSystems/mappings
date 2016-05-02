@@ -285,7 +285,6 @@ join(_proxies(), function(proxies) {
 
   console.log('server ------------- CHECK POINT  001 -------------'); // FOR TESTING ONLY !
 
-  query.setrethinkdb(rethinkdb);
   query.seterror(error);
   query.setschema(schema);
   query.setutility(utility);
@@ -296,6 +295,9 @@ join(_proxies(), function(proxies) {
   query.setfeed = (feed);
   query.setpromise = (promise);
 
+  console.log('server ------------- CHECK POINT  003 -------------'); // FOR TESTING ONLY !
+
+  query.setrethinkdb(rethinkdb); // Do this as last set;
 
   config.setquery(query); // Set query to config
   console.log('server - config.query(): ', config.query()); // Expected set to Query
