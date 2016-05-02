@@ -281,27 +281,20 @@ join(_proxies(), function(proxies) {
   feed.setutility(utility);
 
   console.log('server - config.query(): ', config.query()); // Expected empty Object
-
-  console.log('server ------------- CHECK POINT  000 -------------'); // FOR TESTING ONLY !
-
-  var query = _proxies().proxy().queries().query(); // Causes  [TypeError: self.utility is not a function]
-
-// WE ARE HERE ! 
-
-  console.log('server ------------- CHECK POINT  001 -------------'); // FOR TESTING ONLY !
-
+  var query = _proxies().proxy().queries().query();
   query.seterror(error);
   query.setschema(schema);
   query.setutility(utility);
-
-  console.log('server ------------- CHECK POINT  002 -------------'); // FOR TESTING ONLY !
-
   query.setfeed = (feed);
   query.setpromise = (promise);
 
-  console.log('server ------------- CHECK POINT  003 -------------'); // FOR TESTING ONLY !
+  console.log('server ------------- CHECK POINT  000 -------------'); // FOR TESTING ONLY !
 
-  query.setrethinkdb(rethinkdb); // Do this as last set;
+// WE ARE HERE ! 
+
+  query.setrethinkdb(rethinkdb); // Do this as last set; // Causes [TypeError: self._rethinkdb is not a function]
+
+  console.log('server ------------- CHECK POINT  001 -------------'); // FOR TESTING ONLY !
 
   config.setquery(query); // Set query to config
   console.log('server - config.query(): ', config.query()); // Expected set to Query
