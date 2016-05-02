@@ -275,6 +275,11 @@ join(_proxies(), function(proxies) {
   config.settype(type); // Set type to config
   console.log('server - config.type(): ', config.type()); // Expected set to Type
 
+  var feed = _proxies().proxy().feeds().feed();
+  feed.setevent(event);
+  feed.setpromise(promise);
+  feed.setutility(utility);
+
   console.log('server - config.query(): ', config.query()); // Expected empty Object
 
   console.log('server ------------- CHECK POINT  000 -------------'); // FOR TESTING ONLY !
@@ -291,7 +296,6 @@ join(_proxies(), function(proxies) {
 
   console.log('server ------------- CHECK POINT  002 -------------'); // FOR TESTING ONLY !
 
-  var feed = _proxies().proxy().feeds().feed();
   query.setfeed = (feed);
   query.setpromise = (promise);
 
