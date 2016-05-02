@@ -271,13 +271,15 @@ join(_proxies(), function(proxies) {
   type.setutility(utility);
   type.setschema(schema);
 
-// WE ARE HERE !
-
-  type.setvalidator(_proxies().proxy().libraries().library().validator()); // Causes [TypeError: LibraryValidator is not a function]
+  var validator = _proxies().proxy().libraries().library().validator; // note: don't call validator yet
+  type.setvalidator(validator);
   config.settype(type); // Set type to config
   console.log('server - config.type(): ', config.type()); // Expected set to Type
 
+// WE ARE HERE !
+
   console.log('server - config.query(): ', config.query()); // Expected empty Object
+  
   var query = _proxies().proxy().queries().query(); //---------------------------------------> FIX THIS !! Query is not a function
   config.setquery(query); // Set query to config
   console.log('server - config.query(): ', config.query()); // Expected set to Query
