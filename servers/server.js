@@ -270,17 +270,24 @@ join(_proxies(), function(proxies) {
   type.seterror(error);
   type.setutility(utility);
   type.setschema(schema);
-
   var validator = _proxies().proxy().libraries().library().validator; // note: don't call validator yet
   type.setvalidator(validator);
   config.settype(type); // Set type to config
   console.log('server - config.type(): ', config.type()); // Expected set to Type
 
-// WE ARE HERE !
 
   console.log('server - config.query(): ', config.query()); // Expected empty Object
-  
-  var query = _proxies().proxy().queries().query(); //---------------------------------------> FIX THIS !! Query is not a function
+  var query = _proxies().proxy().queries().query();
+
+// WE ARE HERE ! // queries query index.js needs corrected for below set properities
+
+  query.setrethinkdb(rethinkdb);
+  query.seterror(error);
+  query.setschema(schema);
+  query.setutility(utility);
+  var feed = _proxies().proxy().feeds().feed();
+  query.setfeed = (feed);
+  query.setpromise = (promise);
   config.setquery(query); // Set query to config
   console.log('server - config.query(): ', config.query()); // Expected set to Query
 
